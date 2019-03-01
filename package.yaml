@@ -1,0 +1,48 @@
+name: haskell-sudoku
+version: 0.1.0.0
+#synopsis:
+#description:
+homepage: https://github.com/retnuh/haskell-sudoku#readme
+license: PublicDomain
+license-file: UNLICENSE
+author: Hunter Kelly
+maintainer: retnuh@gmail.com
+copyright: 2019 Hunter Kelly
+category: Game
+extra-source-files:
+  - README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - protolude
+  - containers
+  - goa
+  - split
+  - lens
+  - mtl
+
+executable:
+  main: Main.hs
+  source-dirs: driver
+  dependencies:
+    - haskell-sudoku
+
+library:
+  source-dirs: src
+
+tests:
+  spec:
+    # cpp-options: -DTEST
+    main: Spec.hs
+    source-dirs:
+      - test
+      - src
+    dependencies:
+      - hspec == 2.*
+      - QuickCheck
+      - temporary
+      - mockery >= 0.3
+      - interpolate
+      - template-haskell
+      - HUnit >= 1.6.0.0
+    build-tools: hspec-discover

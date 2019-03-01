@@ -1,0 +1,86 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: a2be6e168f5208fa45376b9c61bea8af519dd71e2e064065a172a845c9857eac
+
+name:           haskell-sudoku
+version:        0.1.0.0
+category:       Game
+homepage:       https://github.com/retnuh/haskell-sudoku#readme
+author:         Hunter Kelly
+maintainer:     retnuh@gmail.com
+copyright:      2019 Hunter Kelly
+license:        PublicDomain
+license-file:   UNLICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+library
+  exposed-modules:
+      Sudoku.Common
+      Sudoku.Puzzles
+      Sudoku.Solvers
+  other-modules:
+      Paths_haskell_sudoku
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , goa
+    , lens
+    , mtl
+    , protolude
+    , split
+  default-language: Haskell2010
+
+executable haskell-sudoku
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_sudoku
+  hs-source-dirs:
+      driver
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , goa
+    , haskell-sudoku
+    , lens
+    , mtl
+    , protolude
+    , split
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Sudoku.Common
+      Sudoku.Puzzles
+      Sudoku.Solvers
+      Paths_haskell_sudoku
+  hs-source-dirs:
+      test
+      src
+  build-tool-depends:
+      hspec-discover:hspec-discover
+  build-depends:
+      HUnit >=1.6.0.0
+    , QuickCheck
+    , base >=4.7 && <5
+    , containers
+    , goa
+    , hspec ==2.*
+    , interpolate
+    , lens
+    , mockery >=0.3
+    , mtl
+    , protolude
+    , split
+    , template-haskell
+    , temporary
+  default-language: Haskell2010
