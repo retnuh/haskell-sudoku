@@ -1,17 +1,20 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Sudoku.Puzzles where
 
-import           Protolude
-import           Sudoku.Common
+import           Sudoku.Common                  ( Puzzle )
 
-mostPuzzles :: [Puzzle]
-mostPuzzles = [eulerExample, easy, mild, difficult1, difficult25, fiendish]
+mostPuzzles :: [(String, Puzzle)]
+mostPuzzles =
+  [ ("euler"      , eulerExample)
+  , ("easy"       , easy)
+  , ("mild"       , mild)
+  , ("difficult1" , difficult1)
+  , ("difficult25", difficult25)
+  , ("fiendish"   , fiendish)
+  ]
 
-allPuzzles :: [Puzzle]
-allPuzzles = hardest : mostPuzzles
-
--- foo
+allPuzzles :: [(String, Puzzle)]
+allPuzzles = ("hardest", hardest) : mostPuzzles
 
 -- brittany-disable-next-binding
 eulerExampleSoln :: Puzzle

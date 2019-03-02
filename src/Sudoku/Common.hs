@@ -36,13 +36,13 @@ isCorrect p =
 isCorrectContainer :: [Int] -> Bool
 isCorrectContainer = (== oneToNine) . fromList
 
-partitionRows :: Puzzle -> [[Int]]
+partitionRows :: [a] -> [[a]]
 partitionRows = chunksOf 9
 
-partitionColumns :: Puzzle -> [[Int]]
+partitionColumns :: [a] -> [[a]]
 partitionColumns = transpose . partitionRows
 
-partitionBoxes :: Puzzle -> [[Int]]
+partitionBoxes :: [a] -> [[a]]
 partitionBoxes =
   fmap join . chunksOf 3 . join . transpose . chunksOf 3 . chunksOf 3
 

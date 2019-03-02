@@ -9,23 +9,22 @@ import           Sudoku.Common                  ( PuzzleResults(..) )
 import           Sudoku.Solvers
 import           Text.Printf                    ( printf )
 
--- import Debug.Trace
 
--- primes = 2 : oddPrimes [3, 5 ..] where
---   oddPrimes (p : ps) = trace ("oddPrimes: " ++ show p) p
---     : oddPrimes [ x | x <- ps, x `mod` p /= 0 ]
-
-printResults :: String -> PuzzleResults -> IO ()
-printResults n r = putStrLn $ printf "%s: %s %s %d"
-                                     (n :: String)
-                                     (show (complete r))
-                                     (show (correct r))
-                                     (processedMessages r)
+printResults :: (String, PuzzleResults) -> IO ()
+printResults (n, r) = printf "%s: %s %s %d\n"
+                             (n :: String)
+                             (show (complete r))
+                             (show (correct r))
+                             (processedMessages r)
 
 
+solvers = [LSWSolver]
 
 main :: IO ()
 main = do
-  let solver = LSWSolver Puzzles.eulerExample
-  printResults "eulerExample" (solve solver)
-  putStrLn "hello world"
+  let solns =
+        [ (name, solve (solver puzzle))
+        | solver         <- solvers
+        , (name, puzzle) <- Puzzles.mostPuzzles
+        ]
+  mapM_ printResults solns
