@@ -161,14 +161,11 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                 if size == 1
                     then do
                         v <- uses (cellLens self . possibilities) (fromJust . head . IntSet.toList)
-                        handleIsValueForCellRcpt m { _value = v}
+                        handleIsValueForCellRcpt m { _value = v, _sender = Nothing} 
                     else do
                         cs <- filteredContainers (cellLens self) sender
                         -- todo replace comprehension with lens fold cleverness?
-                        tell
-                            [ Message IsNotValue c (Just self) self v
-                            | c <- cs
-                            ]
+                        tell [ Message IsNotValue c (Just self) self v | c <- cs ]
 
 
 -- brittany-disable-next-binding    
@@ -245,7 +242,7 @@ runPuzzle = do
             (newMsgs, newS) <- gets $ runHandler handler
             -- let newMsgs' = [ trace ("    nmsgs: " ++ show m) m | m <- newMsgs ]
             put newS
-            msgs .= ms ++newMsgs
+            msgs .= ms ++ newMsgs
             msgCount += 1
             runPuzzle
 
