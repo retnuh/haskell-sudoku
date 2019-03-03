@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 -- remove after debugging
 {-# LANGUAGE PartialTypeSignatures #-}
 
@@ -38,19 +39,17 @@ data ActionName = IsValue | IsNotValue deriving (Show, Eq, Ord)
 
 data Message = Message {
     _action :: ActionName,
-    _subject :: Piece,
     _recipient :: Piece,
-    _value :: CellValue,
-    _sender :: Maybe Piece
+    _sender :: Maybe Piece,
+    _subject :: Piece,
+    _value :: CellValue
     }  deriving (Show, Ord)
 
 instance Eq Message where
     Message { _action = aa, _subject = as, _recipient = ar, _value = av } == Message { _action = ba, _subject = bs, _recipient = br, _value = bv }
         = aa == ba && as == bs && ar == br && av == bv
 
-data CellState =
-    Value CellValue
-    | Possibilities { _possibilities :: IntSet, _conts :: [Piece]}
+data CellState =  CellState { _possibilities :: IntSet, _conts :: [Piece], _cellValue :: Maybe CellValue }
     deriving (Show, Eq, Ord)
 
 data ContainerState = ContainerState {
@@ -65,7 +64,7 @@ data GameState = GameState {
     _containers :: Map Piece ContainerState
 } deriving (Show, Eq, Ord)
 
-makePrisms ''CellState
+makeLenses ''CellState
 makeLenses ''ContainerState
 makeLenses ''GameState
 
@@ -91,22 +90,15 @@ initialMessages :: Puzzle -> [Message]
 initialMessages p = aux [] (zip puzzleIndices p)  where
     aux acc []            = acc
     aux acc ((_, 0) : vs) = aux acc vs
-    aux acc ((i, v) : vs) = aux
-        ( Message { _action    = IsValue
-                  , _value     = v
-                  , _subject   = Cell i
-                  , _recipient = Cell i
-                  , _sender    = Nothing
-                  }
-        : acc
-        )
-        vs
+    aux acc ((i, v) : vs) =
+        aux (Message IsValue (Cell i) Nothing (Cell i) v : acc) vs
 
 makeCell :: CellIndex -> (Piece, CellState)
 makeCell ci =
     ( Cell ci
-    , Possibilities
+    , CellState
         { _possibilities = oneToNine
+        , _cellValue     = Nothing
         , _conts         = [ Container Row (rowForCell ci)
                            , Container Col (columnForCell ci)
                            , Container Box (boxForCell ci)
@@ -129,12 +121,13 @@ makeContainers (t, pf) = mk <$> zip [0 .. 8] (pf puzzleIndices)
 
 isFinished :: GameState -> Bool
 isFinished gs =
-    nullOf (msgs . traverse) gs || nullOf (cells . traverse . _Possibilities) gs
+    nullOf (msgs . traverse) gs
+        || nullOf (cells . traverse . cellValue . _Nothing) gs
 
 gamestateToPuzzle :: GameState -> Puzzle
 gamestateToPuzzle gs = aux <$> gs ^.. cells . traverse  where
-    aux (Value v)       = v
-    aux Possibilities{} = 0
+    aux CellState { _cellValue = Just v } = v
+    aux CellState{}                       = 0
 
 filterSender :: Maybe Piece -> [Piece] -> [Piece]
 filterSender Nothing  ps = ps
@@ -143,88 +136,54 @@ filterSender (Just p) ps = filter (/= p) ps
 filteredContainers
     :: Lens' GameState CellState -> Maybe Piece -> MessageHandler [Piece]
 filteredContainers cellLens sender =
-    uses (cellLens . _Possibilities . _2) (filterSender sender)
+    uses (cellLens . conts) (filterSender sender)
 
-handleIsValueForCellRcpt
-    :: Message -> Lens' GameState CellState -> MessageHandler ()
-handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender } cellLens
+handleIsValueForCellRcpt :: Message -> MessageHandler ()
+handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender }
     = do
-        cs <- filteredContainers cellLens sender
-        tell -- todo replace comprehension with lens fold cleverness?
-            [ Message { _action    = IsValue
-                      , _subject   = self
-                      , _recipient = c
-                      , _sender    = Just self
-                      , _value     = v
-                      }
-            | c <- cs
-            ]
-        cellLens .= Value v
+        cs <- filteredContainers (cells . singular (ix self)) sender
+        -- todo replace comprehension with lens fold cleverness?
+        tell [ Message IsValue c (Just self) self v | c <- cs ]
+        zoom (cells . singular (ix self)) $ do
+            cellValue .= Just v
+            possibilities .= IntSet.empty
+            conts .= []
 
-handleIsNotValueForCellRcpt
-    :: Message -> Lens' GameState CellState -> MessageHandler ()
-handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = sender } cellLens
-    = return ()
-    -- = let possLens = cellLens . _Possibilities . _1
-    --   in
-    --       let containedLens = possLens . contains v
-    --       in
-    --           do
-    --               contained <- use containedLens
-    --               if not contained
-    --                   then return ()
-    --                   else do
-    --                       containedLens .= False
-    --                       size <- uses possLens IntSet.size
-    --                       if True
-    --                           then do
-    --                               (newMsgs, newS) <-
-    --                                   gets
-    --                                       (runHandler
-    --                                           (handleIsValueForCellRcpt
-    --                                               m
-    --                                               cellLens
-    --                                           )
-    --                                       )
-    --                               put newS
-    --                               tell newMsgs
-    --                               return ()
-    --                           else do
-    --                               cs <- filteredContainers cellLens sender
-    --                               tell
-    --                                   [ Message { _action    = IsValue
-    --                                             , _subject   = self
-    --                                             , _recipient = c
-    --                                             , _sender    = Just self
-    --                                             , _value     = v
-    --                                             }
-    --                                   | c <- cs
-    --                                   ]
-    --                               cellLens .= Value v
-    --                               return ()
+handleIsNotValueForCellRcpt :: Message -> MessageHandler ()
+handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = sender }
+    = do
+        stillPossible <- use (cellLens self . possibilities . contains v)
+        if not stillPossible
+            then return ()
+            else do
+                (cellLens self . possibilities . contains v) .= False
+                size <- uses (cellLens self . possibilities) IntSet.size
+                if size == 1
+                    then handleIsValueForCellRcpt m
+                    else do
+                        cs <- filteredContainers (cellLens self) sender
+                        -- todo replace comprehension with lens fold cleverness?
+                        tell [ Message IsValue c (Just self) self v | c <- cs ]
 
 
-
-handleIsValueForContainerRcpt
-    :: Message -> Lens' GameState ContainerState -> MessageHandler ()
-handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _sender = sender, _recipient = self } lens
+handleIsValueForContainerRcpt :: Message -> MessageHandler ()
+handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _sender = sender, _recipient = self }
     = return ()
 
 cellLens :: Piece -> Lens' GameState CellState
-cellLens p = cells . singular (ix p)
+cellLens p@(Cell _) = cells . singular (ix p)
 
 containerLens :: Piece -> Lens' GameState ContainerState
-containerLens p = containers . singular (ix p)
+containerLens p@(Container _ _) = containers . singular (ix p)
 
 handlerForMessage :: Message -> MessageHandler ()
 handlerForMessage m@Message { _action = act, _subject = sub, _recipient = rcpt, _sender = sender }
     = routeAction act rcpt
   where
-    routeAction IsValue c@(Cell _) = handleIsValueForCellRcpt m (cellLens c)
-    routeAction IsNotValue c@(Cell _) =
-        handleIsNotValueForCellRcpt m (cellLens c)
-    routeAction IsValue c@(Container _ _) =
-        handleIsValueForContainerRcpt m (containerLens c)
+    routeAction IsValue c@(Cell _       ) = handleIsValueForCellRcpt m
+    -- routeAction IsNotValue c@(Cell _) =
+    --     handleIsNotValueForCellRcpt m 
+    routeAction IsValue c@(Container _ _) = handleIsValueForContainerRcpt m
 
 runHandler :: MessageHandler () -> GameState -> ([Message], GameState)
 runHandler = runState . execWriterT
@@ -266,12 +225,19 @@ test7 = do
 
 go7 = evalState (evalStateT test7 0) "0"
 
+testW2 :: (WriterT String (State Int)) Int
+testW2 = do
+    modify (* 10)
+    tell " w2 "
+    return 69
+
 testW :: (WriterT String (State Int)) ()
 testW = do
     modify (+ 1)
     tell "foo "
+    testW2
     modify (+ 3)
     tell "bar"
     return ()
 
--- goW = runState (runWriterT testW "start ") 5
+goW = runState (runWriterT testW) 4
