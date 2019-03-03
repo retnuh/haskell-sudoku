@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2949a7da79c7d2a077af9b251378e9aa9fb6fc73f978112a1bd1308d3643270b
+-- hash: 957e8a08937d619016c0f24e26fac25a06bd2082fe3ec0f8814d441d141b76da
 
 name:           haskell-sudoku
 version:        0.1.0.0
@@ -61,6 +61,8 @@ test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Sudoku.CommonSpec
+      Sudoku.Solvers.LensStateWriterSpec
       Sudoku.Common
       Sudoku.Puzzles
       Sudoku.Solvers
