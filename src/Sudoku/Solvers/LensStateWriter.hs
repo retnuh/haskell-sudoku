@@ -171,14 +171,18 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
 -- brittany-disable-next-binding    
 removeCellAsPossibilityForValue :: Piece -> Piece -> Int -> MessageHandler ()
 removeCellAsPossibilityForValue cell self v = do
-    hadTwo <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 2) . Set.size)
-    (containerLens self . possibileCellsForValue . singular (ix v)) . contains cell .= False
-    oneLeft <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 1) . Set.size)
-    if hadTwo && oneLeft
-        then do
-            rcpt <- uses (containerLens self . possibileCellsForValue . singular (ix v)) (fromJust . head . toList)
-            tell [Message IsValue rcpt (Just self) rcpt v]
-        else return ()
+    maybePoss <- use (containerLens self . possibileCellsForValue . singular (at v))
+    case maybePoss of
+        Nothing -> return ()
+        Just poss -> do
+            let hadTwo =  2 == Set.size poss
+            (containerLens self . possibileCellsForValue . singular (ix v)) . contains cell .= False
+            oneLeft <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 1) . Set.size)
+            if hadTwo && oneLeft
+                then do
+                    rcpt <- uses (containerLens self . possibileCellsForValue . singular (ix v)) (fromJust . head . toList)
+                    tell [Message IsValue rcpt (Just self) rcpt v]
+                else return ()
 
 handleIsValueForContainerRcpt :: Message -> MessageHandler ()
 handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
@@ -187,7 +191,7 @@ handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient 
             activeCells . contains cell .= False
             possibileCellsForValue . at v .= Nothing
         cells <- use $ containerLens self . activeCells
-        tell [ Message IsNotValue c (Just self) self v | c <- Set.toList cells ]
+        tell [ Message IsNotValue c (Just self) c v | c <- Set.toList cells ]
         poss <- use (containerLens self . possibileCellsForValue)
         mapM_ (removeCellAsPossibilityForValue cell self) (IntMap.keys poss)
 
@@ -204,7 +208,7 @@ cellLens p@(Cell _) = cells . singular (ix p)
 {-# INLINE cellLens #-}
 
 containerLens :: Piece -> Lens' GameState ContainerState
-containerLens p@(Container _ _) = containers . singular (ix p)
+containerLens p = containers . singular (ix p)
 -- this is partial, should be impossilbe to call with other pieces
 -- todo figure out how to make impossible calls, you know, impossible
 -- type families?
