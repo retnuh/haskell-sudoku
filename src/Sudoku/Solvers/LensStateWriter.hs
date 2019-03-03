@@ -12,6 +12,7 @@ import           Protolude
 import           Control.Lens
 import           Sudoku.Common
 import           Sudoku.Solvers.Common
+import           Data.Maybe                     ( fromJust )
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as Set
 import qualified Data.IntSet                   as IntSet
@@ -54,7 +55,7 @@ data CellState =  CellState { _possibilities :: IntSet, _conts :: [Piece], _cell
 
 data ContainerState = ContainerState {
     _activeCells :: Set Piece,
-    _possibileCellsForValue :: IntMap [Piece]
+    _possibileCellsForValue :: IntMap (Set Piece)
 } deriving (Show, Eq, Ord)
 
 data GameState = GameState {
@@ -77,7 +78,6 @@ initializeGameState p = GameState { _msgCount   = 0
                                   , _containers = Map.fromList containers
                                   }  where
     msgs  = initialMessages p
-    -- states = Map.fromList (cells ++ containers)
     cells = makeCell <$> puzzleIndices
     containers =
         makeContainers
@@ -116,7 +116,7 @@ makeContainers (t, pf) = mk <$> zip [0 .. 8] (pf puzzleIndices)
         cells       = Cell <$> cis
         activeCells = Set.fromList cells
         possibleCellsForValues =
-            IntMap.fromList $ zip [1 .. 9] $ replicate 9 cells
+            IntMap.fromList $ zip [1 .. 9] $ replicate 9 (Set.fromList cells)
 
 
 isFinished :: GameState -> Bool
@@ -135,8 +135,7 @@ filterSender (Just p) ps = filter (/= p) ps
 
 filteredContainers
     :: Lens' GameState CellState -> Maybe Piece -> MessageHandler [Piece]
-filteredContainers cellLens sender =
-    uses (cellLens . conts) (filterSender sender)
+filteredContainers cLens sender = uses (cLens . conts) (filterSender sender)
 
 handleIsValueForCellRcpt :: Message -> MessageHandler ()
 handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender }
@@ -163,27 +162,64 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                     else do
                         cs <- filteredContainers (cellLens self) sender
                         -- todo replace comprehension with lens fold cleverness?
-                        tell [ Message IsValue c (Just self) self v | c <- cs ]
+                        tell
+                            [ Message IsNotValue c (Just self) self v
+                            | c <- cs
+                            ]
 
+
+-- brittany-disable-next-binding    
+removeCellAsPossibilityForValue :: Piece -> Piece -> Int -> MessageHandler ()
+removeCellAsPossibilityForValue cell self v = do
+    hadTwo <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 2) . Set.size)
+    (containerLens self . possibileCellsForValue . singular (ix v)) . contains cell .= False
+    oneLeft <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 1) . Set.size)
+    if hadTwo && oneLeft
+        then do
+            rcpt <- uses (containerLens self . possibileCellsForValue . singular (ix v)) (fromJust . head . toList)
+            tell [Message IsValue rcpt (Just self) rcpt v]
+        else return ()
 
 handleIsValueForContainerRcpt :: Message -> MessageHandler ()
-handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _sender = sender, _recipient = self }
-    = return ()
+handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
+    = do
+        zoom (containerLens self) $ do
+            activeCells . contains cell .= False
+            possibileCellsForValue . at v .= Nothing
+        cells <- use $ containerLens self . activeCells
+        tell [ Message IsNotValue c (Just self) self v | c <- Set.toList cells ]
+        poss <- use (containerLens self . possibileCellsForValue)
+        mapM_ (removeCellAsPossibilityForValue cell self) (IntMap.keys poss)
+
+
+handleIsNotValueForContainerRcpt :: Message -> MessageHandler ()
+handleIsNotValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
+    = removeCellAsPossibilityForValue cell self v
 
 cellLens :: Piece -> Lens' GameState CellState
 cellLens p@(Cell _) = cells . singular (ix p)
+-- this is partial, should be impossilbe to call with other pieces
+-- todo figure out how to make impossible calls, you know, impossible
+-- type families?
+{-# INLINE cellLens #-}
 
 containerLens :: Piece -> Lens' GameState ContainerState
 containerLens p@(Container _ _) = containers . singular (ix p)
+-- this is partial, should be impossilbe to call with other pieces
+-- todo figure out how to make impossible calls, you know, impossible
+-- type families?
+{-# INLINE containerLens #-}
 
 handlerForMessage :: Message -> MessageHandler ()
 handlerForMessage m@Message { _action = act, _subject = sub, _recipient = rcpt, _sender = sender }
     = routeAction act rcpt
   where
-    routeAction IsValue c@(Cell _       ) = handleIsValueForCellRcpt m
-    -- routeAction IsNotValue c@(Cell _) =
-    --     handleIsNotValueForCellRcpt m 
-    routeAction IsValue c@(Container _ _) = handleIsValueForContainerRcpt m
+    routeAction IsValue    c@(Cell _       ) = handleIsValueForCellRcpt m
+    routeAction IsNotValue c@(Cell _       ) = handleIsNotValueForCellRcpt m
+    routeAction IsValue    c@(Container _ _) = handleIsValueForContainerRcpt m
+    routeAction IsNotValue c@(Container _ _) =
+        handleIsNotValueForContainerRcpt m
+
 
 runHandler :: MessageHandler () -> GameState -> ([Message], GameState)
 runHandler = runState . execWriterT
@@ -196,9 +232,9 @@ runPuzzle = do
         else do
             ~(m : ms) <- use msgs
             let handler = handlerForMessage m
-            (newMsgs, newS) <- gets $ runHandler handler
             -- todo is there a state/lens method/operator that modifies and returns? 
             -- i.e. want messages from writer as result
+            (newMsgs, newS) <- gets $ runHandler handler
             put newS
             msgs .= ms ++ newMsgs
             msgCount += 1
