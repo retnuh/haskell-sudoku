@@ -140,11 +140,13 @@ filteredContainers cLens sender = uses (cLens . conts) (filterSender sender)
 handleIsValueForCellRcpt :: Message -> MessageHandler ()
 handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender }
     = do
-        cs <- filteredContainers (cells . singular (ix self)) sender
+        -- we don't filter the sender b/c containers only send IsValue messages when handling a message about
+        -- a different cell, so there is no worry of a cycle
+        cs <- use (cells . singular (ix self) . conts)
         -- todo replace comprehension with lens fold cleverness?
         tell [ Message IsValue c (Just self) self v | c <- cs ]
         zoom (cells . singular (ix self)) $ do
-            -- traceShowM ("set: " ++ show self ++ " val: " ++ show v)
+            -- traceShowM ("set: " ++ show self ++ " val: " ++ show v ++ " sender: " ++ show sender)
             cellValue .= Just v
             possibilities .= IntSet.empty
             conts .= []
