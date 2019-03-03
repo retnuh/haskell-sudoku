@@ -144,6 +144,7 @@ handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender
         -- todo replace comprehension with lens fold cleverness?
         tell [ Message IsValue c (Just self) self v | c <- cs ]
         zoom (cells . singular (ix self)) $ do
+            -- traceShowM ("set: " ++ show self ++ " val: " ++ show v)
             cellValue .= Just v
             possibilities .= IntSet.empty
             conts .= []
@@ -158,7 +159,9 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                 (cellLens self . possibilities . contains v) .= False
                 size <- uses (cellLens self . possibilities) IntSet.size
                 if size == 1
-                    then handleIsValueForCellRcpt m
+                    then do
+                        v <- uses (cellLens self . possibilities) (fromJust . head . IntSet.toList)
+                        handleIsValueForCellRcpt m { _value = v}
                     else do
                         cs <- filteredContainers (cellLens self) sender
                         -- todo replace comprehension with lens fold cleverness?
@@ -235,12 +238,14 @@ runPuzzle = do
         then gets gamestateToPuzzle
         else do
             ~(m : ms) <- use msgs
+            -- traceShowM ("msg:      " ++ show m)
             let handler = handlerForMessage m
             -- todo is there a state/lens method/operator that modifies and returns? 
             -- i.e. want messages from writer as result
             (newMsgs, newS) <- gets $ runHandler handler
+            -- let newMsgs' = [ trace ("    nmsgs: " ++ show m) m | m <- newMsgs ]
             put newS
-            msgs .= ms ++ newMsgs
+            msgs .= ms ++newMsgs
             msgCount += 1
             runPuzzle
 
