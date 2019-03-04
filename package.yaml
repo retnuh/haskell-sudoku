@@ -26,6 +26,7 @@ executable:
   source-dirs: driver
   dependencies:
     - haskell-sudoku
+    - table-layout
 
 library:
   source-dirs: src

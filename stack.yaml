@@ -60,6 +60,8 @@ extra-deps:
   - knob-0.1.1@sha256:8dd62f0470fd829d5c4137b5ecfb0cb9a04a829fa8f436959d460019b3a6f118
   - lazysmallcheck-0.6@sha256:dac7a1e4877681f1260309e863e896674dd6efc1159897b7945893e693f2a6bc
   - goa-3.3@sha256:5ae2bd1f4c29e22070fa32e5c126066813467ffe71a912148304d6f30d200137
+  - table-layout-0.8.0.3@sha256:cd6e6d0dd5c22fcd7fbfa416e81c3748649146de87fd608461c3a9e80a5412ab
+  - data-default-instances-base-0.1.0.1@sha256:985a13d7103e45a65f06f277b735ef025636014f0d29dd6de998bc7628e09be9
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

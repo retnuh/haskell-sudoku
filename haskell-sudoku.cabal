@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 957e8a08937d619016c0f24e26fac25a06bd2082fe3ec0f8814d441d141b76da
+-- hash: 6493f548484f4e20d744c8b4d8c24119983af74ef2971be01b53d682283c213c
 
 name:           haskell-sudoku
 version:        0.1.0.0
@@ -55,6 +55,7 @@ executable haskell-sudoku
     , mtl
     , protolude
     , split
+    , table-layout
   default-language: Haskell2010
 
 test-suite spec
