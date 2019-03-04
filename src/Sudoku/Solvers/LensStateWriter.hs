@@ -162,12 +162,18 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                 size <- uses (cellLens self . possibilities) IntSet.size
                 if size == 1
                     then do
-                        v <- uses (cellLens self . possibilities) (fromJust . head . IntSet.toList)
-                        handleIsValueForCellRcpt m { _value = v, _sender = Nothing} 
+                        v <- uses (cellLens self . possibilities)
+                                  (fromJust . head . IntSet.toList)
+                        handleIsValueForCellRcpt m { _value  = v
+                                                   , _sender = Nothing
+                                                   }
                     else do
                         cs <- filteredContainers (cellLens self) sender
                         -- todo replace comprehension with lens fold cleverness?
-                        tell [ Message IsNotValue c (Just self) self v | c <- cs ]
+                        tell
+                            [ Message IsNotValue c (Just self) self v
+                            | c <- cs
+                            ]
 
 
 -- brittany-disable-next-binding    
@@ -242,8 +248,8 @@ runPuzzle = do
             -- todo is there a state/lens method/operator that modifies and returns? 
             -- i.e. want messages from writer as result
             (newMsgs, newS) <- gets $ runHandler handler
-            -- let newMsgs' = [ trace ("    nmsgs: " ++ show m) m | m <- newMsgs ]
             put newS
+            -- let newMsgs' = [ trace ("    nmsgs: " ++ show m) m | m <- newMsgs ]
             msgs .= ms ++ newMsgs
             msgCount += 1
             runPuzzle
@@ -259,29 +265,3 @@ instance Solver LSWSolver where
                           , processedMessages = state ^. msgCount
                           , solution          = sol
                           }
-
-test7 = do
-    modify (+ 1)
-    lift $ modify (++ "1")
-    a <- get
-    b <- lift get
-    return (a, b)
-
-go7 = evalState (evalStateT test7 0) "0"
-
-testW2 :: (WriterT String (State Int)) Int
-testW2 = do
-    modify (* 10)
-    tell " w2 "
-    return 69
-
-testW :: (WriterT String (State Int)) ()
-testW = do
-    modify (+ 1)
-    tell "foo "
-    testW2
-    modify (+ 3)
-    tell "bar"
-    return ()
-
-goW = runState (runWriterT testW) 4
