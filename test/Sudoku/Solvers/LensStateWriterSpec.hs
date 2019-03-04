@@ -13,8 +13,8 @@ spec =
     describe "Sudoku.Solvers.LSWSolver" $ do
         let results = fmap (solve . LSWSolver . snd) Puzzles.mostPuzzles
         it "solves most puzzles to completion"
-            $ mapM_ (flip shouldBe True . complete) results
+            $ mapM_ (flip shouldBe True . _complete) results
 
         it "solves most puzzles correctly"
-            $ mapM_ (flip shouldBe True . correct) results
+            $ mapM_ (flip shouldBe True . _correct) results
 

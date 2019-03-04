@@ -33,18 +33,18 @@ data Piece =
     | Container ContainerType Int
     deriving (Show, Eq, Ord)
 
-data ActionName = IsValue | IsNotValue deriving (Show, Eq, Ord)
+data MessageType = IsValue | IsNotValue deriving (Show, Eq, Ord)
 
 data Message = Message {
-    _action :: ActionName,
+    _mtype :: MessageType,
     _recipient :: Piece,
     _sender :: Maybe Piece,
     _subject :: Piece,
     _value :: CellValue
-    }  deriving (Show, Ord)
+}  deriving (Show, Ord)
 
 instance Eq Message where
-    Message { _action = aa, _subject = as, _recipient = ar, _value = av } == Message { _action = ba, _subject = bs, _recipient = br, _value = bv }
+    Message { _mtype = aa, _subject = as, _recipient = ar, _value = av } == Message { _mtype = ba, _subject = bs, _recipient = br, _value = bv }
         = aa == ba && as == bs && ar == br && av == bv
 
 data CellState =  CellState { _possibilities :: IntSet, _conts :: [Piece], _cellValue :: Maybe CellValue }
@@ -174,21 +174,22 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                             ]
 
 
--- brittany-disable-next-binding    
 removeCellAsPossibilityForValue :: Piece -> Piece -> Int -> MessageHandler ()
 removeCellAsPossibilityForValue cell self v = do
-    maybePoss <- use (containerLens self . possibileCellsForValue . singular (at v))
+    let possLens :: Lens' GameState (IntMap (Set Piece))
+        possLens = containerLens self . possibileCellsForValue
+    maybePoss <- use (possLens . singular (at v))
     case maybePoss of
-        Nothing -> return ()
+        Nothing   -> return ()
         Just poss -> do
-            let hadTwo =  2 == Set.size poss
-            (containerLens self . possibileCellsForValue . singular (ix v)) . contains cell .= False
-            oneLeft <- uses (containerLens self . possibileCellsForValue . singular (ix v)) ((== 1) . Set.size)
-            if hadTwo && oneLeft
-                then do
-                    rcpt <- uses (containerLens self . possibileCellsForValue . singular (ix v)) (fromJust . head . toList)
-                    tell [Message IsValue rcpt (Just self) rcpt v]
-                else return ()
+            let setLens :: Lens' GameState (Set Piece)
+                setLens = possLens . singular (ix v)
+            let hadTwo = 2 == Set.size poss
+            setLens . contains cell .= False
+            oneLeft <- uses setLens ((== 1) . Set.size)
+            when (hadTwo && oneLeft) $ do
+                rcpt <- uses setLens (fromJust . head . toList)
+                tell [Message IsValue rcpt (Just self) rcpt v]
 
 handleIsValueForContainerRcpt :: Message -> MessageHandler ()
 handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
@@ -221,8 +222,8 @@ containerLens p = containers . singular (ix p)
 {-# INLINE containerLens #-}
 
 handlerForMessage :: Message -> MessageHandler ()
-handlerForMessage m@Message { _action = act, _subject = sub, _recipient = rcpt, _sender = sender }
-    = routeAction act rcpt
+handlerForMessage m@Message { _mtype = mtype, _subject = sub, _recipient = rcpt, _sender = sender }
+    = routeAction mtype rcpt
   where
     routeAction IsValue    c@(Cell _       ) = handleIsValueForCellRcpt m
     routeAction IsNotValue c@(Cell _       ) = handleIsNotValueForCellRcpt m
