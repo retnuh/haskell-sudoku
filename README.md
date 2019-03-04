@@ -6,7 +6,57 @@ Mostly as a way of learning me some Haskell. It's a non-trivial problem that
 I'm familiar with so the focus is on getting the feel for the language, toolchain and libraries,
 rather than wrestling with the problem itself.
 
-I'll start with the "good enough" version, that solves most (all?) Sudoku that don't require backtracking.
+I've started with the "good enough" version, that solves most (all?) Sudoku that don't require backtracking.
 I may or may not implement a version that uses backtracking. Having done one in the clojure project,
-and it being a pain in the ass, I'm disinclined. On the other hand, it may be an interesting exploration
+and it being a pain in the arse, I'm disinclined. On the other hand, it may be an interesting exploration
 of Haskell's laziness.... Hrmmm.
+
+## Running, building, testing
+
+This project uses [Stack](https://www.haskellstack.org/) as the build tool, so uses the usual
+`stack build`, `stack test`, and `stack run` commands.
+
+```{bash}
+$ stack run
+┌─────────────┬───────────┬──────────┬───────────────┬────────────────────┐
+│   Puzzle    │ Complete? │ Correct? │ Messages Used │ Messages Remaining │
+╞═════════════╪═══════════╪══════════╪═══════════════╪════════════════════╡
+│ euler       │ True      │ True     │ 1938          │ 18                 │
+├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ easy        │ True      │ True     │ 1920          │ 21                 │
+├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ mild        │ True      │ True     │ 1961          │ 19                 │
+├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ difficult1  │ True      │ True     │ 1996          │ 8                  │
+├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ difficult25 │ True      │ True     │ 2007          │ 22                 │
+├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ fiendish    │ True      │ True     │ 2061          │ 17                 │
+└─────────────┴───────────┴──────────┴───────────────┴────────────────────┘
+```
+
+## Thoughts
+
+Certainly a useful learning experience. Some key points, in no particular order.
+
+- Partial application is a very useful way of enclosing information to line up types, especially w/ state monad. It's basically a super convenient way of creating closures.
+- Lenses are cool and interesting, but definately very hard for a beginner. In particular, the polymorpism stuff has some gotchas, I spent a lot of time fighting the compiler until I learned that you can't use them in let simple (untyped) let bindings, and they're hard to pass around between functions. They are handy for deeply nested state though, which is what the problem is all about.
+- The error messages from GHC, while obscure, slowly start to make sense (at least part of the time :) )
+- Debugging can still be quite challenging. I had to jump through some hoops to get readable trace output. I was having some problem where output from trace calls was all interleaved, even though, as far as I'm aware, I don't have any threading. In the end I ended up having to run things from ghci invoked with the following bit of shell magic (should work in bash and zsh): `stack ghci > >(tee /tmp/stdout.log) 2> >(tee /tmp/stderr.log >&2)`
+- The Writer monad (transformer) is pretty cool. It's a nice way of separating out the generation of new messages from the updating of state. While working on this, one of the challenges of reading the Clojure code was separating out some of the funkiness for dealing with the two things at the same time.
+- Code density between the Clojure and Haskell versions is pretty similar.
+- My editor setup could use some work; I've been trying VSCode + [Haskell Language Server](https://github.com/alanz/vscode-hie-server) plugin. It's mostly okay except things get in a weird state occasionally where I'll edit a file, save, and it will nuke the change I just make until I go into the shell and do a `killall hie-wrapper`.
+
+## Future stuff
+
+I'll probably do the first of these, the rest aren't too likely (at least at the moment)
+
+- make a `MessageQueue` typeclass to see if different ways of gathering the messages can reduce the message count. It's essentially just a `Monoid` and I think a sorted list should see some improvements if the `IsValue` messages get delivered before other messages.
+- Look at an implementation using the [Conduit](https://github.com/snoyberg/conduit) library. This would be a pretty different implementation paradigm (maybe) so could be interesting. Also looks like a very interesting library.
+- Also look at doing an implementation using [FRP](https://wiki.haskell.org/Functional_Reactive_Programming) using maybe [Reactive Banana](https://wiki.haskell.org/Reactive-banana) or [Reflex](https://github.com/reflex-frp/reflex).
+- Possibly implement the addtional "contstrained by box" rule I've discovered but never implemented in the Clojure version. I don't know if this would solve the "hardest" puzzle or not, but it should be much easier to implement than a full backtracking/search based soultion.
+- Implement a backtracking/search solution. Perhaps from scratch, rather than sitting on top of exisiting solution. Dunno.
+
+## Feedback welcome
+
+I realize that this is quite unlikely to be looked at by anybody, but if anybody does look at it and has any questions, comments, feedback, suggestions or anything else, I'd love to hear it. Feel free to open a github issue or whatever.
