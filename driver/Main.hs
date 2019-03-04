@@ -5,24 +5,34 @@ module Main where
 -- import           Protolude
 
 import qualified Sudoku.Puzzles                as Puzzles
-import           Sudoku.Common                  ( PuzzleResults(..) )
+import           Sudoku.Common                  ( PuzzleResults(..)
+                                                , MessageStats(..)
+                                                )
 import           Sudoku.Solvers
 import           Text.Printf                    ( printf )
 import           Text.Layout.Table
 
 printResults :: [RowGroup] -> IO ()
 printResults = putStrLn . tableString
-      [def, def, def, def]
+      [def, def, def, def, def]
       unicodeS
-      (titlesH ["Puzzle", "Complete?", "Correct?", "Message Count"])
+      (titlesH
+            [ "Puzzle"
+            , "Complete?"
+            , "Correct?"
+            , "Messages Used"
+            , "Messages Remaining"
+            ]
+      )
 
 
 formatResults :: (String, PuzzleResults) -> RowGroup
 formatResults (n, r) = rowG
       [ n :: String
-      , show (complete r)
-      , show (correct r)
-      , show (processedMessages r)
+      , show (_complete r)
+      , show (_correct r)
+      , show $ (_used . _stats) r
+      , show $ (_remaining . _stats) r
       ]
 
 

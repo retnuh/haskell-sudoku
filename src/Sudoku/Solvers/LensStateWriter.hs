@@ -56,23 +56,26 @@ data ContainerState = ContainerState {
 } deriving (Show, Eq, Ord)
 
 data GameState = GameState {
-    _msgCount :: Int,
     _msgs :: MessageQueue Message,
     _cells :: Map Piece CellState,
-    _containers :: Map Piece ContainerState
+    _containers :: Map Piece ContainerState,
+    _mstats :: MessageStats
 } deriving (Show, Eq, Ord)
 
 makeLenses ''CellState
 makeLenses ''ContainerState
 makeLenses ''GameState
 
+makeLenses ''PuzzleResults
+makeLenses ''MessageStats
+
 type MessageHandler = (WriterT (MessageQueue Message) (State GameState))
 
 initializeGameState :: Puzzle -> GameState
-initializeGameState p = GameState { _msgCount   = 0
-                                  , _msgs       = msgs
+initializeGameState p = GameState { _msgs       = msgs
                                   , _cells      = Map.fromList cells
                                   , _containers = Map.fromList containers
+                                  , _mstats     = MessageStats 0 0
                                   }  where
     msgs  = initialMessages p
     cells = makeCell <$> puzzleIndices
@@ -235,7 +238,10 @@ runPuzzle :: State GameState Puzzle
 runPuzzle = do
     finished <- gets isFinished
     if finished
-        then gets gamestateToPuzzle
+        then do
+            size <- uses msgs length
+            mstats . remaining .= size
+            gets gamestateToPuzzle
         else do
             ~(m : ms) <- use msgs
             -- traceShowM ("msg:      " ++ show m)
@@ -246,7 +252,7 @@ runPuzzle = do
             put newS
             -- let newMsgs' = [ trace ("    nmsgs: " ++ show m) m | m <- newMsgs ]
             msgs .= ms ++ newMsgs
-            msgCount += 1
+            mstats . used += 1
             runPuzzle
 
 
@@ -255,8 +261,8 @@ newtype LSWSolver = LSWSolver Puzzle
 instance Solver LSWSolver where
     solve (LSWSolver p) =
         let (sol, state) = runState runPuzzle (initializeGameState p)
-        in  PuzzleResults { complete          = isComplete sol
-                          , correct           = isCorrect sol
-                          , processedMessages = state ^. msgCount
-                          , solution          = sol
+        in  PuzzleResults { _complete = isComplete sol
+                          , _correct  = isCorrect sol
+                          , _solution = sol
+                          , _stats    = _mstats state
                           }

@@ -11,12 +11,17 @@ type CellValue = Int
 
 type Puzzle = [Int]
 
+data MessageStats = MessageStats {
+  _used :: Int,
+  _remaining :: Int
+} deriving (Show, Eq, Ord)
+
 data PuzzleResults = PuzzleResults {
-  complete :: Bool,
-  correct :: Bool,
-  processedMessages :: Int ,
-  solution :: Puzzle
-  } deriving (Show, Eq, Ord)
+  _complete :: Bool,
+  _correct :: Bool,
+  _solution :: Puzzle,
+  _stats :: MessageStats
+} deriving (Show, Eq, Ord)
 
 puzzleIndices :: [Int]
 puzzleIndices = [0 .. 80]
