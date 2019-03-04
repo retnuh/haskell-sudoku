@@ -1,6 +1,6 @@
 # haskell-sudoku
 
-An implementation of a Sudoku solver in Haskell, similar/ported from my [Monadoku](https://github.com/retnuh/monadoku) project.
+An implementation of a Sudoku solver in Haskell, similar/ported from my [Monadoku](https://github.com/retnuh/monadoku) project (which, sadly, fizzled just at the point of using monads to structure things - oh well).
 
 Mostly as a way of learning me some Haskell. It's a non-trivial problem that
 I'm familiar with so the focus is on getting the feel for the language, toolchain and libraries,
