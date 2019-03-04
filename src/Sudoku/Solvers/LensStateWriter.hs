@@ -23,9 +23,6 @@ import qualified Data.IntMap.Strict            as IntMap
 import           Control.Monad.State
 import           Control.Monad.Writer
 
--- remove these after debugging
-import qualified Sudoku.Puzzles                as Puzzles
-import           Prelude                        ( String )
 
 type MessageQueue mt = [mt]
 
@@ -69,7 +66,7 @@ makeLenses ''CellState
 makeLenses ''ContainerState
 makeLenses ''GameState
 
-type MessageHandler = (WriterT [Message] (State GameState))
+type MessageHandler = (WriterT (MessageQueue Message) (State GameState))
 
 initializeGameState :: Puzzle -> GameState
 initializeGameState p = GameState { _msgCount   = 0
@@ -164,9 +161,7 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
                     then do
                         v <- uses (cellLens self . possibilities)
                                   (fromJust . head . IntSet.toList)
-                        handleIsValueForCellRcpt m { _value  = v
-                                                   , _sender = Nothing
-                                                   }
+                        handleIsValueForCellRcpt m { _value = v }
                     else do
                         cs <- filteredContainers (cellLens self) sender
                         -- todo replace comprehension with lens fold cleverness?
