@@ -7,4 +7,6 @@ module Sudoku.Solvers
 where
 
 import           Sudoku.Solvers.Common
-import           Sudoku.Solvers.LensStateWriter ( LSWSolver(..) )
+import           Sudoku.Solvers.LensStateWriter ( LSWSolver(..)
+                                                , Message
+                                                )
