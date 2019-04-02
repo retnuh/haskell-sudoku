@@ -18,21 +18,45 @@ This project uses [Stack](https://www.haskellstack.org/) as the build tool, so u
 
 ```{bash}
 $ stack run
-┌─────────────┬───────────┬──────────┬───────────────┬────────────────────┐
-│   Puzzle    │ Complete? │ Correct? │ Messages Used │ Messages Remaining │
-╞═════════════╪═══════════╪══════════╪═══════════════╪════════════════════╡
-│ euler       │ True      │ True     │ 1938          │ 18                 │
-├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
-│ easy        │ True      │ True     │ 1920          │ 21                 │
-├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
-│ mild        │ True      │ True     │ 1961          │ 19                 │
-├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
-│ difficult1  │ True      │ True     │ 1996          │ 8                  │
-├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
-│ difficult25 │ True      │ True     │ 2007          │ 22                 │
-├─────────────┼───────────┼──────────┼───────────────┼────────────────────┤
-│ fiendish    │ True      │ True     │ 2061          │ 17                 │
-└─────────────┴───────────┴──────────┴───────────────┴────────────────────┘
+┌───────────┬─────────────┬──────────────┬───────────┬──────────┬───────────────┬────────────────────┐
+│  Solver   │   Puzzle    │ MessageQueue │ Complete? │ Correct? │ Messages Used │ Messages Remaining │
+╞═══════════╪═════════════╪══════════════╪═══════════╪══════════╪═══════════════╪════════════════════╡
+│ LSWSolver │ euler       │ set          │ True      │ True     │ 1018          │ 771                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ euler       │ list         │ True      │ True     │ 1938          │ 18                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ euler       │ dlist        │ True      │ True     │ 1938          │ 18                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ easy        │ set          │ True      │ True     │ 1048          │ 640                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ easy        │ list         │ True      │ True     │ 1920          │ 21                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ easy        │ dlist        │ True      │ True     │ 1920          │ 21                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ mild        │ set          │ True      │ True     │ 1054          │ 701                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ mild        │ list         │ True      │ True     │ 1961          │ 19                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ mild        │ dlist        │ True      │ True     │ 1961          │ 19                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult1  │ set          │ True      │ True     │ 1426          │ 458                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult1  │ list         │ True      │ True     │ 1996          │ 8                  │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult1  │ dlist        │ True      │ True     │ 1996          │ 8                  │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult25 │ set          │ True      │ True     │ 1791          │ 123                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult25 │ list         │ True      │ True     │ 2007          │ 22                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ difficult25 │ dlist        │ True      │ True     │ 2007          │ 22                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ fiendish    │ set          │ True      │ True     │ 1508          │ 460                │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ fiendish    │ list         │ True      │ True     │ 2061          │ 17                 │
+├───────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver │ fiendish    │ dlist        │ True      │ True     │ 2061          │ 17                 │
+└───────────┴─────────────┴──────────────┴───────────┴──────────┴───────────────┴────────────────────┘
 ```
 
 ## Thoughts
@@ -46,14 +70,15 @@ Certainly a useful learning experience. Some key points, in no particular order.
 - The Writer monad (transformer) is pretty cool. It's a nice way of separating out the generation of new messages from the updating of state. While working on this, one of the challenges of reading the Clojure code was separating out some of the funkiness for dealing with the two things at the same time.
 - Code density between the Clojure and Haskell versions is pretty similar.
 - My editor setup could use some work; I've been trying VSCode + [Haskell Language Server](https://github.com/alanz/vscode-hie-server) plugin. It's mostly okay except things get in a weird state occasionally where I'll edit a file, save, and it will nuke the change I just make until I go into the shell and do a `killall hie-wrapper`.
+- The `MessageQueue` typeclass, while ultimately reasonably clean, took a long time and I spent quite a bit of time bouncing off the compiler. Still have a fair bit to learn in terms of when to use contraints for types, etc.
 
 ## Future stuff
 
-I'll probably do the first of these, and maybe the second; the rest aren't too likely (at least at the moment).
+I've done the first of these, and may try second; the rest aren't too likely (at least at the moment).
 
-- make a `MessageQueue` typeclass to see if different ways of gathering the messages can reduce the message count. It's essentially just a `Monoid` and I think a sorted list should see some improvements if the `IsValue` messages get delivered before other messages.
+- ~~make a `MessageQueue` typeclass to see if different ways of gathering the messages can reduce the message count. It's essentially just a `Monoid` and I think a sorted list should see some improvements if the `IsValue` messages get delivered before other messages.~~
 - Look at type families to deal with the issue of some of the partial functions. I'm interested in using Haskell to make clearly wrong things inexpressible rather than just something to avoid.
-- Look at an implementation using the [Conduit](https://github.com/snoyberg/conduit) library. This would be a pretty different implementation paradigm (maybe) so could be interesting. Also looks like a very interesting library.
+- Look at an implementation using the [Conduit](https://github.com/snoyberg/conduit) library. This would be a pretty different implementation paradigm (maybe) so could be interesting. Also looks like a very interesting library. **UPDATE** Having looked at this a little more it's not clear that it would actually be useful for an implementation - a bit of square peg/round hole going on.
 - Also look at doing an implementation using [FRP](https://wiki.haskell.org/Functional_Reactive_Programming) using maybe [Reactive Banana](https://wiki.haskell.org/Reactive-banana) or [Reflex](https://github.com/reflex-frp/reflex).
 - Possibly implement the addtional "contstrained by box" rule I've discovered but never implemented in the Clojure version. I don't know if this would solve the "hardest" puzzle or not, but it should be much easier to implement than a full backtracking/search based soultion.
 - Implement a backtracking/search solution. Perhaps from scratch, rather than sitting on top of exisiting solution. Dunno.

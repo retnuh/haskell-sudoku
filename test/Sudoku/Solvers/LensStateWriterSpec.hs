@@ -11,8 +11,7 @@ import           Sudoku.MessageQueue
 
 spec :: Spec
 spec = describe "Sudoku.Solvers.LSWSolver" $ do
-    let results =
-            fmap (solve . (LSWSolver wrapAsList) . snd) Puzzles.mostPuzzles
+    let results = fmap (solve wrapAsList . LSWSolver . snd) Puzzles.mostPuzzles
     it "solves most puzzles to completion"
         $ mapM_ (flip shouldBe True . _complete) results
 

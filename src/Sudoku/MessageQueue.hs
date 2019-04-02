@@ -1,14 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE QuantifiedConstraints #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GADTs #-}
--- {-# LANGUAGE FlexibleContexts #-}
--- {-# LANGUAGE ConstraintKinds #-}
--- {-# LANGUAGE AllowAmbiguousTypes #-}
-
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Sudoku.MessageQueue where
 import           Protolude
@@ -19,41 +12,32 @@ import           Data.Traversable
 import qualified Data.DList                    as DList
 import           Data.DList                     ( DList )
 
-class (forall a.  Monoid (q a)) => MessageQueue (q :: * -> *) a where
-    next :: (q a) -> Maybe (a, q a)
-    length :: (q a) -> Int
+class (Ord a,  Monoid (q a)) => MessageQueue (q :: * -> *) a where
+    next :: q a -> Maybe (a, q a)
+    len :: q a -> Int
 
-instance (forall a. Ord a) => MessageQueue [] a where
+instance (Ord a) => MessageQueue [] a where
     next []       = Nothing
     next (x : xs) = Just (x, xs)
-    length = Protolude.length
+    len = Protolude.length
 
-instance (forall a. Ord a) => MessageQueue Set a where
--- instance MessageQueue Set a where
+instance (Ord a) => MessageQueue Set a where
     next q = case Set.toAscList q of
         []       -> Nothing
         (x : xs) -> Just (x, Set.fromAscList xs)
-    length = Set.size
+    len = Set.size
 
-instance (forall a. Ord a) => MessageQueue DList a where
+instance (Ord a) => MessageQueue DList a where
     next q = case DList.toList q of
         []       -> Nothing
         (x : xs) -> Just (x, DList.fromList xs)
-    length = Protolude.length . DList.toList
+    len = Protolude.length . DList.toList
 
--- newtype MessageQueueWrapper (q :: * -> *) a = MessageQueueWrapper { runWrapper :: (MessageQueue q a, Ord a) => ([a] -> q a) }
+wrapAsSet :: (Ord a) => [a] -> Set a
+wrapAsSet = Set.fromList
 
--- wrapAsSet :: (forall a. Ord a) => MessageQueueWrapper Set a
--- wrapAsSet = MessageQueueWrapper Set.fromList
+wrapAsList :: (Ord a) =>  [a] -> [a]
+wrapAsList = identity
 
--- wrapAsList :: (forall a. Ord a) => MessageQueueWrapper [] a
--- wrapAsList = MessageQueueWrapper identity
-
--- wrapAsDList :: (forall a. Ord a) => MessageQueueWrapper DList a
--- wrapAsDList = MessageQueueWrapper DList.fromList
-
-data MessageQueueType q where
-    ListMQT :: MessageQueueType []
-    SetMQT :: MessageQueueType Set
-    DListMQT :: MessageQueueType DList
-
+wrapAsDList :: (Ord a) => [a] -> DList a
+wrapAsDList = DList.fromList

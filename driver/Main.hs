@@ -1,5 +1,5 @@
 -- {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE GADTs #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Main where
 -- import           Protolude
@@ -12,14 +12,15 @@ import           Sudoku.MessageQueue
 import           Sudoku.Solvers
 import           Text.Printf                    ( printf )
 import           Text.Layout.Table
-import Control.Monad (join)
+import           Control.Monad                  ( join )
+import qualified Data.Set                      as Set
 
 printResults :: [RowGroup] -> IO ()
 printResults = putStrLn . tableString
-      [def, def, def, def, def]
+      [def, def, def, def, def, def, def]
       unicodeS
       (titlesH
-            [ "Puzzle"
+            [ "Solver", "Puzzle", "MessageQueue"
             , "Complete?"
             , "Correct?"
             , "Messages Used"
@@ -30,7 +31,7 @@ printResults = putStrLn . tableString
 
 formatResults :: (String, String, String, PuzzleResults) -> RowGroup
 formatResults (pn, sn, qn, r) = rowG
-      [ (printf "%s,%s,%s" pn sn qn)
+      [ pn, sn, qn
       , show (_complete r)
       , show (_correct r)
       , show $ (_used . _stats) r
@@ -42,15 +43,16 @@ formatResults (pn, sn, qn, r) = rowG
 -- queues = [("set", SetMQT)]
 solvers = [("LSWSolver", LSWSolver)]
 
-runQueues sname solver pname puzzle = 
-      let l = (sname, pname, "list", solve (LSWSolver ListMQT puzzle))
-          s = (sname, pname, "set", solve (LSWSolver SetMQT puzzle))
-          d = (sname, pname, "dlist", solve (LSWSolver DListMQT puzzle)) in
-            [s, l, d]
+runQueues sname solverCtor pname puzzle =
+      let solver = solverCtor puzzle
+          s      = (sname, pname, "set", solve wrapAsSet solver)
+          l      = (sname, pname, "list", solve wrapAsList solver)
+          d      = (sname, pname, "dlist", solve wrapAsDList solver)
+      in  [s, l, d]
 
 main :: IO ()
 main = do
-      let solns = join 
+      let solns = join
                 [ runQueues sname solver pname puzzle
                 | (sname, solver) <- solvers
                 , (pname, puzzle) <- Puzzles.mostPuzzles

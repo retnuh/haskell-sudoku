@@ -1,22 +1,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
-
--- remove after debugging
-{-# LANGUAGE PartialTypeSignatures #-}
-
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE QuantifiedConstraints #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeFamilies #-}
 
 
 
@@ -26,7 +13,7 @@ import           Protolude
 import           Control.Lens
 import           Sudoku.Common
 import           Sudoku.Solvers.Common
-import           Sudoku.MessageQueue            ( MessageQueueType(..) )
+import           Sudoku.MessageQueue
 import           Data.Maybe                     ( fromJust )
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as Set
@@ -70,31 +57,9 @@ data ContainerState = ContainerState {
     _possibileCellsForValue :: IntMap (Set Piece)
 } deriving (Show, Eq, Ord)
 
-class (Monoid (q Message)) => MessageQueue (q :: * -> *) where
-    next :: q Message -> Maybe (Message, q Message)
-    len :: q Message -> Int
-
-instance MessageQueue [] where
-    next []       = Nothing
-    next (x : xs) = Just (x, xs)
-    len = Protolude.length
-
--- instance (forall a. Ord a) => MessageQueue Set a where
-instance MessageQueue Set where
-    next q = case Set.toAscList q of
-        []       -> Nothing
-        (x : xs) -> Just (x, Set.fromAscList xs)
-    len = Set.size
-
-instance MessageQueue DList where
-    next q = case DList.toList q of
-        []       -> Nothing
-        (x : xs) -> Just (x, DList.fromList xs)
-    len = Protolude.length . DList.toList
-
-data GameState (q :: * -> *) = GameState {
+data GameState q = GameState {
     _wrapper :: [Message] -> q Message,
-    _msgs :: MessageQueue q => q Message,
+    _msgs :: MessageQueue q Message => q Message,
     _cells :: Map Piece CellState,
     _containers :: Map Piece ContainerState,
     _mstats :: MessageStats
@@ -110,14 +75,18 @@ makeLenses ''MessageStats
 type MessageHandler q = (WriterT (q Message) (State (GameState q)))
 
 initializeGameState
-    :: (MessageQueue q) => MessageQueueWrapper q -> Puzzle -> GameState q
-initializeGameState mqw p = GameState { _wrapper    = runWrapper mqw
-                                      , _msgs       = msgs
-                                      , _cells      = Map.fromList cells
-                                      , _containers = Map.fromList containers
-                                      , _mstats     = MessageStats 0 0
-                                      }  where
-    msgs  = runWrapper mqw $ initialMessages p
+    :: (MessageQueue q Message)
+    => ([Message] -> q Message)
+    -> Puzzle
+    -> GameState q
+initializeGameState wrapper p = GameState
+    { _wrapper    = wrapper
+    , _msgs       = msgs
+    , _cells      = Map.fromList cells
+    , _containers = Map.fromList containers
+    , _mstats     = MessageStats 0 0
+    }  where
+    msgs  = wrapper $ initialMessages p
     cells = makeCell <$> puzzleIndices
     containers =
         makeContainers
@@ -173,18 +142,19 @@ filterSender Nothing  ps = ps
 filterSender (Just p) ps = filter (/= p) ps
 
 filteredContainers
-    :: (MessageQueue q)
+    :: (MessageQueue q Message)
     => Lens' (GameState q) CellState
     -> Maybe Piece
     -> MessageHandler q [Piece]
 filteredContainers cLens sender = uses (cLens . conts) (filterSender sender)
 
-tellQ :: (MessageQueue q) => [Message] -> MessageHandler q ()
+tellQ :: (MessageQueue q Message) => [Message] -> MessageHandler q ()
 tellQ msgs = do
     wrap <- use wrapper
     tell $ wrap msgs
 
-handleIsValueForCellRcpt :: (MessageQueue q) => Message -> MessageHandler q ()
+handleIsValueForCellRcpt
+    :: (MessageQueue q Message) => Message -> MessageHandler q ()
 handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender }
     = do
         -- we don't filter the sender b/c containers only send IsValue messages when handling a message about
@@ -199,7 +169,7 @@ handleIsValueForCellRcpt Message { _subject = self, _value = v, _sender = sender
             conts .= []
 
 handleIsNotValueForCellRcpt
-    :: (MessageQueue q) => Message -> MessageHandler q ()
+    :: (MessageQueue q Message) => Message -> MessageHandler q ()
 handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = sender }
     = do
         stillPossible <- use (cellLens self . possibilities . contains v)
@@ -223,7 +193,7 @@ handleIsNotValueForCellRcpt m@Message { _subject = self, _value = v, _sender = s
 
 
 removeCellAsPossibilityForValue
-    :: (MessageQueue q) => Piece -> Piece -> Int -> MessageHandler q ()
+    :: (MessageQueue q Message) => Piece -> Piece -> Int -> MessageHandler q ()
 removeCellAsPossibilityForValue cell self v = do
     let possLens :: Lens' (GameState q) (IntMap (Set Piece))
         possLens = containerLens self . possibileCellsForValue
@@ -241,7 +211,7 @@ removeCellAsPossibilityForValue cell self v = do
                 tellQ [Message IsValue rcpt (Just self) rcpt v]
 
 handleIsValueForContainerRcpt
-    :: (MessageQueue q) => Message -> MessageHandler q ()
+    :: (MessageQueue q Message) => Message -> MessageHandler q ()
 handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
     = do
         zoom (containerLens self) $ do
@@ -254,7 +224,7 @@ handleIsValueForContainerRcpt Message { _subject = cell, _value = v, _recipient 
 
 
 handleIsNotValueForContainerRcpt
-    :: (MessageQueue q) => Message -> MessageHandler q ()
+    :: (MessageQueue q Message) => Message -> MessageHandler q ()
 handleIsNotValueForContainerRcpt Message { _subject = cell, _value = v, _recipient = self }
     = removeCellAsPossibilityForValue cell self v
 
@@ -272,7 +242,7 @@ containerLens p = containers . singular (ix p)
 -- type families?
 {-# INLINE containerLens #-}
 
-handlerForMessage :: (MessageQueue q) => Message -> MessageHandler q ()
+handlerForMessage :: (MessageQueue q Message) => Message -> MessageHandler q ()
 handlerForMessage m@Message { _mtype = mtype, _subject = sub, _recipient = rcpt, _sender = sender }
     = routeAction mtype rcpt
   where
@@ -284,13 +254,13 @@ handlerForMessage m@Message { _mtype = mtype, _subject = sub, _recipient = rcpt,
 
 
 runHandler
-    :: (MessageQueue q)
+    :: (MessageQueue q Message)
     => MessageHandler q ()
     -> GameState q
     -> (q Message, GameState q)
 runHandler = runState . execWriterT
 
-runPuzzle :: (MessageQueue q) => State (GameState q) Puzzle
+runPuzzle :: (MessageQueue q Message) => State (GameState q) Puzzle
 runPuzzle = do
     maybeNext <- uses msgs next
     finished  <- gets (isFinished maybeNext)
@@ -315,25 +285,18 @@ runPuzzle = do
             runPuzzle
 
 
-data LSWSolver q where
-    LSWSolver :: MessageQueueType q -> Puzzle -> LSWSolver q
+newtype LSWSolver = LSWSolver Puzzle 
 
-newtype MessageQueueWrapper (q :: * -> *) = MessageQueueWrapper { runWrapper :: (MessageQueue q) => ([Message] -> q Message) }
 
-wrapAsSet :: MessageQueueWrapper Set
-wrapAsSet = MessageQueueWrapper Set.fromList
-
-derp :: MessageQueueType q -> MessageQueueWrapper q
--- derp _ = wrapAsSet
-derp SetMQT   = MessageQueueWrapper Set.fromList
-derp ListMQT  = MessageQueueWrapper identity
-derp DListMQT = MessageQueueWrapper DList.fromList
-
-instance (MessageQueue q) => Solver (LSWSolver q) where
-    -- solve :: (MessageQueue q) => LSWSolver q -> PuzzleResults
-    solve (LSWSolver mqt p) =
-        let (sol, state) =
-                    runState runPuzzle (initializeGameState (derp mqt) p)
+instance  Solver LSWSolver  where
+    type Msg LSWSolver = Message
+    solve
+        :: (MessageQueue q Message)
+        => ([Message] -> q Message)
+        -> LSWSolver
+        -> PuzzleResults
+    solve mqw (LSWSolver p) =
+        let (sol, state) = runState runPuzzle (initializeGameState mqw p)
         in  PuzzleResults { _complete = isComplete sol
                           , _correct  = isCorrect sol
                           , _solution = sol
