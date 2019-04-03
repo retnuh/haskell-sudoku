@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4c2e8def70c716b79c78b46ed294eef936f2a393b20273a01f4b87d5ab417dd9
+-- hash: 6bee21c9373496933edb96f9d5f7c82339564ad9621dd8d5bdfdbce1beee0c0f
 
 name:           haskell-sudoku
 version:        0.1.0.0
@@ -27,6 +27,7 @@ library
       Sudoku.Solvers
       Sudoku.Solvers.Common
       Sudoku.Solvers.LensStateWriter
+      Sudoku.Solvers.PartialApplicationLensStateWriter
   other-modules:
       Paths_haskell_sudoku
   hs-source-dirs:
@@ -67,12 +68,14 @@ test-suite spec
   other-modules:
       Sudoku.CommonSpec
       Sudoku.Solvers.LensStateWriterSpec
+      Sudoku.Solvers.PartialApplicationLensStateWriterSpec
       Sudoku.Common
       Sudoku.MessageQueue
       Sudoku.Puzzles
       Sudoku.Solvers
       Sudoku.Solvers.Common
       Sudoku.Solvers.LensStateWriter
+      Sudoku.Solvers.PartialApplicationLensStateWriter
       Paths_haskell_sudoku
   hs-source-dirs:
       test

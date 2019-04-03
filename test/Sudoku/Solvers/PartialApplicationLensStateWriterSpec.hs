@@ -1,5 +1,5 @@
 
-module Sudoku.Solvers.LensStateWriterSpec where
+module Sudoku.Solvers.PartialApplicationLensStateWriterSpec where
 
 import           Test.Hspec
 import           Test.QuickCheck
@@ -10,8 +10,10 @@ import           Sudoku.Solvers
 import           Sudoku.MessageQueue
 
 spec :: Spec
-spec = describe "Sudoku.Solvers.LSWSolver" $ do
-    let results = fmap (solve wrapAsList . LSWSolver . snd) Puzzles.mostPuzzles
+spec = describe "Sudoku.Solvers.PartialApplicationLSWSolver" $ do
+    let results = fmap
+            (solve wrapAsList . PartialApplicationLSWSolver . snd)
+            Puzzles.mostPuzzles
     it "solves most puzzles to completion"
         $ mapM_ (flip shouldBe True . _complete) results
 
@@ -20,4 +22,5 @@ spec = describe "Sudoku.Solvers.LSWSolver" $ do
 
     it "completes but does not solve the 'hardest' puzzle"
         $ (flip shouldBe False . _correct)
-        $ solve wrapAsList (LSWSolver Puzzles.hardest)
+        $ solve wrapAsList (PartialApplicationLSWSolver Puzzles.hardest)
+

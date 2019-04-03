@@ -5,8 +5,6 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TypeFamilies #-}
 
-
-
 module Sudoku.Solvers.LensStateWriter where
 
 import           Protolude
@@ -57,13 +55,12 @@ data ContainerState = ContainerState {
     _possibileCellsForValue :: IntMap (Set Piece)
 } deriving (Show, Eq, Ord)
 
-data GameState q = GameState {
-    _wrapper :: [Message] -> q Message,
-    _msgs :: MessageQueue q Message => q Message,
-    _cells :: Map Piece CellState,
-    _containers :: Map Piece ContainerState,
-    _mstats :: MessageStats
-}
+data GameState q = GameState { _wrapper :: [Message] -> q Message
+                             , _msgs :: MessageQueue q Message => q Message
+                             , _cells :: Map Piece CellState
+                             , _containers :: Map Piece ContainerState
+                             , _mstats :: MessageStats 
+                             }
 
 makeLenses ''CellState
 makeLenses ''ContainerState
@@ -129,7 +126,7 @@ makeContainers (t, pf) = mk <$> zip [0 .. 8] (pf puzzleIndices)
 
 
 isFinished :: Maybe (Message, q Message) -> GameState q -> Bool
-isFinished Nothing  gs = False
+isFinished Nothing  gs = True
 isFinished (Just _) gs = nullOf (cells . traverse . cellValue . _Nothing) gs
 
 gamestateToPuzzle :: GameState q -> Puzzle

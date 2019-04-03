@@ -20,7 +20,9 @@ printResults = putStrLn . tableString
       [def, def, def, def, def, def, def]
       unicodeS
       (titlesH
-            [ "Solver", "Puzzle", "MessageQueue"
+            [ "Solver"
+            , "Puzzle"
+            , "MessageQueue"
             , "Complete?"
             , "Correct?"
             , "Messages Used"
@@ -31,7 +33,9 @@ printResults = putStrLn . tableString
 
 formatResults :: (String, String, String, PuzzleResults) -> RowGroup
 formatResults (pn, sn, qn, r) = rowG
-      [ pn, sn, qn
+      [ pn
+      , sn
+      , qn
       , show (_complete r)
       , show (_correct r)
       , show $ (_used . _stats) r
@@ -41,7 +45,10 @@ formatResults (pn, sn, qn, r) = rowG
 -- todo need an HList I guess
 -- queues = [("list", ListMQT), ("set", SetMQT), ("dlist", DListMQT)]
 -- queues = [("set", SetMQT)]
-solvers = [("LSWSolver", LSWSolver)]
+solvers =
+      [
+            -- ("LSWSolver", LSWSolver), 
+       ("PartialApplicationLSWSolver", PartialApplicationLSWSolver)]
 
 runQueues sname solverCtor pname puzzle =
       let solver = solverCtor puzzle
