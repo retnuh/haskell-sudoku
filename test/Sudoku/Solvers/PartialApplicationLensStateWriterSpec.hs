@@ -12,7 +12,7 @@ import           Sudoku.MessageQueue
 spec :: Spec
 spec = describe "Sudoku.Solvers.PartialApplicationLSWSolver" $ do
     let results = fmap
-            (solve wrapAsList . PartialApplicationLSWSolver . snd)
+            (solve PartialApplicationLSWSolver wrapAsList . snd)
             Puzzles.mostPuzzles
     it "solves most puzzles to completion"
         $ mapM_ (flip shouldBe True . _complete) results
@@ -22,5 +22,5 @@ spec = describe "Sudoku.Solvers.PartialApplicationLSWSolver" $ do
 
     it "completes but does not solve the 'hardest' puzzle"
         $ (flip shouldBe False . _correct)
-        $ solve wrapAsList (PartialApplicationLSWSolver Puzzles.hardest)
+        $ solve PartialApplicationLSWSolver wrapAsList Puzzles.hardest
 

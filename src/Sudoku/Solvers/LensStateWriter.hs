@@ -282,17 +282,13 @@ runPuzzle = do
             runPuzzle
 
 
-newtype LSWSolver = LSWSolver Puzzle 
+data LSWSolver = LSWSolver 
 
 
-instance  Solver LSWSolver  where
+instance Solver LSWSolver  where
     type Msg LSWSolver = Message
-    solve
-        :: (MessageQueue q Message)
-        => ([Message] -> q Message)
-        -> LSWSolver
-        -> PuzzleResults
-    solve mqw (LSWSolver p) =
+    solve :: (MessageQueue q Message) => LSWSolver -> ([Message] -> q Message) -> Puzzle -> PuzzleResults
+    solve LSWSolver mqw p =
         let (sol, state) = runState runPuzzle (initializeGameState mqw p)
         in  PuzzleResults { _complete = isComplete sol
                           , _correct  = isCorrect sol

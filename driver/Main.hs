@@ -50,11 +50,10 @@ solvers =
             -- ("LSWSolver", LSWSolver), 
        ("PartialApplicationLSWSolver", PartialApplicationLSWSolver)]
 
-runQueues sname solverCtor pname puzzle =
-      let solver = solverCtor puzzle
-          s      = (sname, pname, "set", solve wrapAsSet solver)
-          l      = (sname, pname, "list", solve wrapAsList solver)
-          d      = (sname, pname, "dlist", solve wrapAsDList solver)
+runQueues sname solver pname puzzle =
+      let s      = (sname, pname, "set", solve solver wrapAsSet puzzle)
+          l      = (sname, pname, "list", solve solver wrapAsList puzzle)
+          d      = (sname, pname, "dlist", solve solver wrapAsDList puzzle)
       in  [s, l, d]
 
 main :: IO ()

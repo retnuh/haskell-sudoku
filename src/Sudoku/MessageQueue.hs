@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+
 module Sudoku.MessageQueue where
 import           Protolude
 import qualified Data.Set                      as Set

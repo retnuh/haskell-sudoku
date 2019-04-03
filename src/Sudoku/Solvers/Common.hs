@@ -11,4 +11,4 @@ import           Protolude
 
 class Solver s where
     type Msg s
-    solve :: (Ord (Msg s), MessageQueue q (Msg s)) => ([Msg s] -> q (Msg s)) -> s -> PuzzleResults
+    solve :: (Ord (Msg s), MessageQueue q (Msg s)) => s  -> ([Msg s] -> q (Msg s)) -> Puzzle -> PuzzleResults

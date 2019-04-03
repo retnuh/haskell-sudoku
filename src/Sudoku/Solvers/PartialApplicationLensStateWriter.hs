@@ -253,16 +253,12 @@ runPuzzle mqw = do
             runPuzzle mqw
 
 
-newtype PartialApplicationLSWSolver = PartialApplicationLSWSolver Puzzle
+data PartialApplicationLSWSolver = PartialApplicationLSWSolver
 
 instance Solver PartialApplicationLSWSolver where
     type Msg PartialApplicationLSWSolver = Message
-    solve
-        :: (MessageQueue q Message)
-        => ([Message] -> q Message)
-        -> PartialApplicationLSWSolver
-        -> PuzzleResults
-    solve mqw (PartialApplicationLSWSolver p) =
+    solve :: (MessageQueue q Message) => PartialApplicationLSWSolver -> ([Message] -> q Message) -> Puzzle -> PuzzleResults
+    solve PartialApplicationLSWSolver mqw  p =
         let (sol, (mstate, gstate)) =
                     runState (runPuzzle mqw) (initializeGameState mqw p)
         in  PuzzleResults { _complete = isComplete sol
