@@ -4,6 +4,7 @@
 module Main where
 -- import           Protolude
 
+import Criterion.Main
 import qualified Sudoku.Puzzles                as Puzzles
 import           Sudoku.Common                  ( PuzzleResults(..)
                                                 , MessageStats(..)
@@ -57,8 +58,20 @@ runQueues solver pname puzzle =
 
 runPuzzles solver = join [ runQueues solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]
 
+createBench solver pname puzzle = [
+      bench (pname ++ "/set")  $ whnf (_remaining . _stats . solve solver wrapAsSet) puzzle,
+      bench (pname ++ "/list")  $ whnf (_remaining . _stats . solve solver wrapAsList) puzzle,
+      bench (pname ++ "/dlist")  $ whnf (_remaining . _stats . solve solver wrapAsDList) puzzle
+      ]
+
+createBenchmarks solver = bgroup (show solver) $ join [ createBench solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]
+
+
 main :: IO ()
 main = do
       let solnsA = runPuzzles LSWSolver
       let solnsB = runPuzzles PartialApplicationLSWSolver
       printResults $ formatResults <$> (solnsA ++ solnsB)
+      defaultMain [createBenchmarks LSWSolver, createBenchmarks PartialApplicationLSWSolver]
+
+      

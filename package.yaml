@@ -28,6 +28,7 @@ executable:
   dependencies:
     - haskell-sudoku
     - table-layout
+    - criterion
 
 library:
   source-dirs: src

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6bee21c9373496933edb96f9d5f7c82339564ad9621dd8d5bdfdbce1beee0c0f
+-- hash: b8fdb6b9cbb97fa0ad60e3c32198e003f9d42d11159c787763d61f9fa51d4ee1
 
 name:           haskell-sudoku
 version:        0.1.0.0
@@ -52,6 +52,7 @@ executable haskell-sudoku
   build-depends:
       base >=4.7 && <5
     , containers
+    , criterion
     , dlist
     , goa
     , haskell-sudoku
