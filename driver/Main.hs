@@ -7,6 +7,7 @@ module Main where
 import qualified Sudoku.Puzzles                as Puzzles
 import           Sudoku.Common                  ( PuzzleResults(..)
                                                 , MessageStats(..)
+                                                , Puzzle
                                                 )
 import           Sudoku.MessageQueue
 import           Sudoku.Solvers
@@ -30,8 +31,9 @@ printResults = putStrLn . tableString
             ]
       )
 
+type Result = (String, String, String, PuzzleResults)
 
-formatResults :: (String, String, String, PuzzleResults) -> RowGroup
+formatResults :: Result -> RowGroup
 formatResults (pn, sn, qn, r) = rowG
       [ pn
       , sn
@@ -45,22 +47,18 @@ formatResults (pn, sn, qn, r) = rowG
 -- todo need an HList I guess
 -- queues = [("list", ListMQT), ("set", SetMQT), ("dlist", DListMQT)]
 -- queues = [("set", SetMQT)]
-solvers =
-      [
-            -- ("LSWSolver", LSWSolver), 
-       ("PartialApplicationLSWSolver", PartialApplicationLSWSolver)]
 
-runQueues sname solver pname puzzle =
-      let s      = (sname, pname, "set", solve solver wrapAsSet puzzle)
-          l      = (sname, pname, "list", solve solver wrapAsList puzzle)
-          d      = (sname, pname, "dlist", solve solver wrapAsDList puzzle)
+
+runQueues solver pname puzzle =
+      let s      = (show solver, pname, "set", solve solver wrapAsSet puzzle)
+          l      = (show solver, pname, "list", solve solver wrapAsList puzzle )
+          d      = (show solver, pname, "dlist", solve solver wrapAsDList puzzle)
       in  [s, l, d]
+
+runPuzzles solver = join [ runQueues solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]
 
 main :: IO ()
 main = do
-      let solns = join
-                [ runQueues sname solver pname puzzle
-                | (sname, solver) <- solvers
-                , (pname, puzzle) <- Puzzles.mostPuzzles
-                ]
-      printResults $ formatResults <$> solns
+      let solnsA = runPuzzles LSWSolver
+      let solnsB = runPuzzles PartialApplicationLSWSolver
+      printResults $ formatResults <$> (solnsA ++ solnsB)

@@ -253,7 +253,7 @@ runPuzzle mqw = do
             runPuzzle mqw
 
 
-data PartialApplicationLSWSolver = PartialApplicationLSWSolver
+data PartialApplicationLSWSolver = PartialApplicationLSWSolver deriving (Show)
 
 instance Solver PartialApplicationLSWSolver where
     type Msg PartialApplicationLSWSolver = Message

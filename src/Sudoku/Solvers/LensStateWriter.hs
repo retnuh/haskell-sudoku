@@ -282,7 +282,7 @@ runPuzzle = do
             runPuzzle
 
 
-data LSWSolver = LSWSolver 
+data LSWSolver = LSWSolver deriving (Show)
 
 
 instance Solver LSWSolver  where
