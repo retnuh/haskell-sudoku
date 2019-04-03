@@ -71,7 +71,8 @@ main :: IO ()
 main = do
       let solnsA = runPuzzles LSWSolver
       let solnsB = runPuzzles PartialApplicationLSWSolver
-      printResults $ formatResults <$> (solnsA ++ solnsB)
-      defaultMain [createBenchmarks LSWSolver, createBenchmarks PartialApplicationLSWSolver]
+      let solnsC = runPuzzles SafeLSWSolver
+      printResults $ formatResults <$> (solnsA ++ solnsB ++ solnsC)
+      defaultMain [createBenchmarks LSWSolver, createBenchmarks PartialApplicationLSWSolver, createBenchmarks SafeLSWSolver]
 
       
