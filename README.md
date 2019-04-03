@@ -327,11 +327,11 @@ Certainly a useful learning experience. Some key points, in no particular order.
 - My editor setup could use some work; I've been trying VSCode + [Haskell Language Server](https://github.com/alanz/vscode-hie-server) plugin. It's mostly okay except things get in a weird state occasionally where I'll edit a file, save, and it will nuke the change I just make until I go into the shell and do a `killall hie-wrapper`.
 - The `MessageQueue` typeclass, while ultimately reasonably clean, took a long time and I spent quite a bit of time bouncing off the compiler. Still have a fair bit to learn in terms of when to use contraints for types, etc.
 - Using the `PartialApplicationLSWSolver` I was able to remove the use of partial functions and possible errors present in the basic `LSWSolver`, but you can see that, with the `Set` based `MessageQueue`, that it suffers - this is due to the fact that you can't really compare functions for equality. I'm still interested in taking a look at type/data families to see if I can get the best of both worlds.
-- It pays to measure! I would have thought that the `List` based `MessageQueue` would perform the worst, but looking at the [results](benchmarks.html) it is usually the best. And even though the `PartialApplicationLSWSolver` processes more messages, it is quite a bit faster than the `LSWSolver`. If I had to hazard a guess, it's probably due to the fact that it generates less intermediate "gargbage" data - i.e. less allocations.
+- It pays to measure! I would have thought that the `List` based `MessageQueue` would perform the worst, but looking at the [results](https://retnuh.github.com/haskell-sudoku/benchmarks.html) it is usually the best. And even though the `PartialApplicationLSWSolver` processes more messages, it is quite a bit faster than the `LSWSolver`. If I had to hazard a guess, it's probably due to the fact that it generates less intermediate "gargbage" data - i.e. less allocations.
 
 ## Performance Results
 
-Here are the [Criterion](http://www.serpentine.com/criterion/) [benchmark results](benchmarks.html)
+Here are the [Criterion](http://www.serpentine.com/criterion/) [benchmark results](https://retnuh.github.com/haskell-sudoku/benchmarks.html)
 
 ## Future stuff
 
