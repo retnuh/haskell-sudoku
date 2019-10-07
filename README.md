@@ -506,5 +506,3 @@ mean                 9.720 ms   (9.602 ms .. 9.922 ms)
 std dev              405.6 μs   (242.1 μs .. 623.0 μs)
 variance introduced by outliers: 18% (moderately inflated)
 ```
-
-
