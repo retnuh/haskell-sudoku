@@ -14,8 +14,9 @@ import           Sudoku.MessageQueue
 import           Sudoku.Solvers
 import           Text.Printf                    ( printf )
 import           Text.Layout.Table
-import           Control.Monad                  ( join )
+import           Control.Monad                  ( join, when )
 import qualified Data.Set                      as Set
+import System.Environment (getArgs)
 
 printResults :: [RowGroup] -> IO ()
 printResults = putStrLn . tableString
@@ -64,15 +65,18 @@ createBench solver pname puzzle = [
       bench (pname ++ "/dlist")  $ whnf (_remaining . _stats . solve solver wrapAsDList) puzzle
       ]
 
-createBenchmarks solver = bgroup (show solver) $ join [ createBench solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]
+createBenchmarks solver = bgroup (show solver) $ join [ createBench solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ] 
 
+runBenchmarks = defaultMain [createBenchmarks LSWSolver, createBenchmarks PartialApplicationLSWSolver, createBenchmarks SafeLSWSolver, createBenchmarks SimplifiedLSWSolver ]
 
 main :: IO ()
 main = do
       let solnsA = runPuzzles LSWSolver
       let solnsB = runPuzzles PartialApplicationLSWSolver
       let solnsC = runPuzzles SafeLSWSolver
+      let solnsC = runPuzzles SimplifiedLSWSolver
       printResults $ formatResults <$> (solnsA ++ solnsB ++ solnsC)
-      defaultMain [createBenchmarks LSWSolver, createBenchmarks PartialApplicationLSWSolver, createBenchmarks SafeLSWSolver]
+      args <- getArgs
+      when ("--benchmark" `elem` args) runBenchmarks
 
       
