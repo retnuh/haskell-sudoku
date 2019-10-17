@@ -16,6 +16,7 @@ import           Text.Printf                    ( printf )
 import           Text.Layout.Table
 import           Control.Monad                  ( join )
 import qualified Data.Set                      as Set
+import qualified Data.Vector                   as V
 
 printResults :: [RowGroup] -> IO ()
 printResults = putStrLn . tableString
@@ -54,14 +55,16 @@ runQueues solver pname puzzle =
       let s      = (show solver, pname, "set", solve solver wrapAsSet puzzle)
           l      = (show solver, pname, "list", solve solver wrapAsList puzzle )
           d      = (show solver, pname, "dlist", solve solver wrapAsDList puzzle)
-      in  [s, l, d]
+          v      = (show solver, pname, "vector", solve solver wrapAsVector puzzle)
+      in  [s, l, d, v]
 
 runPuzzles solver = join [ runQueues solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]
 
 createBench solver pname puzzle = [
       bench (pname ++ "/set")  $ whnf (_remaining . _stats . solve solver wrapAsSet) puzzle,
       bench (pname ++ "/list")  $ whnf (_remaining . _stats . solve solver wrapAsList) puzzle,
-      bench (pname ++ "/dlist")  $ whnf (_remaining . _stats . solve solver wrapAsDList) puzzle
+      bench (pname ++ "/dlist")  $ whnf (_remaining . _stats . solve solver wrapAsDList) puzzle,
+      bench (pname ++ "/vector")  $ whnf (_remaining . _stats . solve solver wrapAsVector) puzzle
       ]
 
 createBenchmarks solver = bgroup (show solver) $ join [ createBench solver pname puzzle | (pname, puzzle) <- Puzzles.mostPuzzles ]

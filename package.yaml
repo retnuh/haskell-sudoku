@@ -21,6 +21,7 @@ dependencies:
   - lens
   - mtl
   - dlist
+  - vector
 
 executable:
   main: Main.hs

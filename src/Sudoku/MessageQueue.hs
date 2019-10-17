@@ -2,6 +2,7 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TupleSections #-}
 
 
 module Sudoku.MessageQueue where
@@ -12,6 +13,9 @@ import           Data.Monoid
 import           Data.Traversable
 import qualified Data.DList                    as DList
 import           Data.DList                     ( DList )
+import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector, (!?) )
+
 
 class (Ord a,  Monoid (q a)) => MessageQueue (q :: * -> *) a where
     next :: q a -> Maybe (a, q a)
@@ -34,6 +38,10 @@ instance (Ord a) => MessageQueue DList a where
         (x : xs) -> Just (x, DList.fromList xs)
     len = Protolude.length . DList.toList
 
+instance (Ord a) => MessageQueue Vector a where
+    next q = (, V.tail q) <$> q !? 0
+    len = V.length
+
 wrapAsSet :: (Ord a) => [a] -> Set a
 wrapAsSet = Set.fromList
 
@@ -42,3 +50,6 @@ wrapAsList = identity
 
 wrapAsDList :: (Ord a) => [a] -> DList a
 wrapAsDList = DList.fromList
+
+wrapAsVector :: (Ord a) => [a] -> Vector a
+wrapAsVector = V.fromList

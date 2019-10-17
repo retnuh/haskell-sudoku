@@ -54,7 +54,6 @@ I realize that this is quite unlikely to be looked at by anybody, but if anybody
 ## Results
 
 ```{bash}
-$ stack run -- --output benchmarks.html
 ┌─────────────────────────────┬─────────────┬──────────────┬───────────┬──────────┬───────────────┬────────────────────┐
 │           Solver            │   Puzzle    │ MessageQueue │ Complete? │ Correct? │ Messages Used │ Messages Remaining │
 ╞═════════════════════════════╪═════════════╪══════════════╪═══════════╪══════════╪═══════════════╪════════════════════╡
@@ -64,11 +63,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ euler       │ dlist        │ True      │ True     │ 1938          │ 18                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ euler       │ vector       │ True      │ True     │ 1938          │ 18                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ easy        │ set          │ True      │ True     │ 1048          │ 640                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ easy        │ list         │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ easy        │ dlist        │ True      │ True     │ 1920          │ 21                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ easy        │ vector       │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ mild        │ set          │ True      │ True     │ 1054          │ 701                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -76,11 +79,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ mild        │ dlist        │ True      │ True     │ 1961          │ 19                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ mild        │ vector       │ True      │ True     │ 1961          │ 19                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ difficult1  │ set          │ True      │ True     │ 1426          │ 458                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ difficult1  │ list         │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ difficult1  │ dlist        │ True      │ True     │ 1996          │ 8                  │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ difficult1  │ vector       │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ difficult25 │ set          │ True      │ True     │ 1791          │ 123                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -88,11 +95,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ difficult25 │ dlist        │ True      │ True     │ 2007          │ 22                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ difficult25 │ vector       │ True      │ True     │ 2007          │ 22                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ fiendish    │ set          │ True      │ True     │ 1508          │ 460                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ fiendish    │ list         │ True      │ True     │ 2061          │ 17                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ LSWSolver                   │ fiendish    │ dlist        │ True      │ True     │ 2061          │ 17                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ LSWSolver                   │ fiendish    │ vector       │ True      │ True     │ 2061          │ 17                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ euler       │ set          │ True      │ True     │ 1677          │ 203                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -100,11 +111,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ euler       │ dlist        │ True      │ True     │ 1938          │ 18                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ euler       │ vector       │ True      │ True     │ 1938          │ 18                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ easy        │ set          │ True      │ True     │ 1594          │ 298                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ easy        │ list         │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ easy        │ dlist        │ True      │ True     │ 1920          │ 21                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ easy        │ vector       │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ mild        │ set          │ True      │ True     │ 1892          │ 44                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -112,11 +127,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ mild        │ dlist        │ True      │ True     │ 1961          │ 19                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ mild        │ vector       │ True      │ True     │ 1961          │ 19                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ difficult1  │ set          │ True      │ True     │ 1885          │ 71                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ difficult1  │ list         │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ difficult1  │ dlist        │ True      │ True     │ 1996          │ 8                  │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ difficult1  │ vector       │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ difficult25 │ set          │ True      │ True     │ 1959          │ 25                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -124,11 +143,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ difficult25 │ dlist        │ True      │ True     │ 2007          │ 22                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ difficult25 │ vector       │ True      │ True     │ 2007          │ 22                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ fiendish    │ set          │ True      │ True     │ 1994          │ 36                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ fiendish    │ list         │ True      │ True     │ 2061          │ 17                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ PartialApplicationLSWSolver │ fiendish    │ dlist        │ True      │ True     │ 2061          │ 17                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ PartialApplicationLSWSolver │ fiendish    │ vector       │ True      │ True     │ 2061          │ 17                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ euler       │ set          │ True      │ True     │ 1219          │ 711                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -136,11 +159,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ euler       │ dlist        │ True      │ True     │ 1938          │ 18                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ euler       │ vector       │ True      │ True     │ 1938          │ 18                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ easy        │ set          │ True      │ True     │ 1181          │ 665                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ easy        │ list         │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ easy        │ dlist        │ True      │ True     │ 1920          │ 21                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ easy        │ vector       │ True      │ True     │ 1920          │ 21                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ mild        │ set          │ True      │ True     │ 1200          │ 742                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -148,11 +175,15 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ mild        │ dlist        │ True      │ True     │ 1961          │ 19                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ mild        │ vector       │ True      │ True     │ 1961          │ 19                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ difficult1  │ set          │ True      │ True     │ 1439          │ 532                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ difficult1  │ list         │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ difficult1  │ dlist        │ True      │ True     │ 1996          │ 8                  │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ difficult1  │ vector       │ True      │ True     │ 1996          │ 8                  │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ difficult25 │ set          │ True      │ True     │ 1907          │ 75                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
@@ -160,349 +191,471 @@ $ stack run -- --output benchmarks.html
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ difficult25 │ dlist        │ True      │ True     │ 2007          │ 22                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ difficult25 │ vector       │ True      │ True     │ 2007          │ 22                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ fiendish    │ set          │ True      │ True     │ 1947          │ 103                │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ fiendish    │ list         │ True      │ True     │ 2061          │ 17                 │
 ├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
 │ SafeLSWSolver               │ fiendish    │ dlist        │ True      │ True     │ 2061          │ 17                 │
+├─────────────────────────────┼─────────────┼──────────────┼───────────┼──────────┼───────────────┼────────────────────┤
+│ SafeLSWSolver               │ fiendish    │ vector       │ True      │ True     │ 2061          │ 17                 │
 └─────────────────────────────┴─────────────┴──────────────┴───────────┴──────────┴───────────────┴────────────────────┘
 benchmarking LSWSolver/euler/set
-time                 44.81 ms   (44.06 ms .. 45.63 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 44.92 ms   (44.58 ms .. 45.29 ms)
-std dev              685.9 μs   (492.9 μs .. 936.6 μs)
+time                 37.69 ms   (37.49 ms .. 37.90 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 37.65 ms   (37.52 ms .. 37.96 ms)
+std dev              392.1 μs   (209.1 μs .. 655.4 μs)
 
 benchmarking LSWSolver/euler/list
-time                 34.93 ms   (34.32 ms .. 36.56 ms)
-                     0.994 R²   (0.978 R² .. 1.000 R²)
-mean                 34.88 ms   (34.44 ms .. 36.07 ms)
-std dev              1.362 ms   (425.2 μs .. 2.363 ms)
-variance introduced by outliers: 11% (moderately inflated)
+time                 32.15 ms   (26.71 ms .. 37.64 ms)
+                     0.944 R²   (0.912 R² .. 1.000 R²)
+mean                 28.75 ms   (27.62 ms .. 31.29 ms)
+std dev              3.139 ms   (1.340 ms .. 5.109 ms)
+variance introduced by outliers: 45% (moderately inflated)
 
 benchmarking LSWSolver/euler/dlist
-time                 40.61 ms   (39.93 ms .. 41.28 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 40.39 ms   (40.10 ms .. 40.76 ms)
-std dev              678.8 μs   (460.8 μs .. 1.000 ms)
+time                 34.40 ms   (30.71 ms .. 39.14 ms)
+                     0.962 R²   (0.936 R² .. 0.999 R²)
+mean                 32.18 ms   (31.48 ms .. 34.17 ms)
+std dev              2.321 ms   (956.8 μs .. 4.371 ms)
+variance introduced by outliers: 28% (moderately inflated)
+
+benchmarking LSWSolver/euler/vector
+time                 6.870 ms   (6.789 ms .. 6.945 ms)
+                     0.999 R²   (0.997 R² .. 0.999 R²)
+mean                 6.965 ms   (6.896 ms .. 7.120 ms)
+std dev              282.5 μs   (132.2 μs .. 513.8 μs)
+variance introduced by outliers: 18% (moderately inflated)
 
 benchmarking LSWSolver/easy/set
-time                 51.86 ms   (48.58 ms .. 55.33 ms)
-                     0.992 R²   (0.982 R² .. 0.999 R²)
-mean                 50.04 ms   (49.10 ms .. 51.38 ms)
-std dev              2.144 ms   (1.482 ms .. 3.178 ms)
-variance introduced by outliers: 14% (moderately inflated)
+time                 41.88 ms   (40.28 ms .. 42.84 ms)
+                     0.998 R²   (0.997 R² .. 1.000 R²)
+mean                 41.25 ms   (40.91 ms .. 41.67 ms)
+std dev              737.2 μs   (500.6 μs .. 952.7 μs)
 
 benchmarking LSWSolver/easy/list
-time                 46.22 ms   (44.27 ms .. 48.37 ms)
-                     0.995 R²   (0.987 R² .. 0.999 R²)
-mean                 47.02 ms   (46.11 ms .. 48.24 ms)
-std dev              1.993 ms   (1.400 ms .. 3.010 ms)
-variance introduced by outliers: 13% (moderately inflated)
+time                 37.41 ms   (33.35 ms .. 46.64 ms)
+                     0.847 R²   (0.639 R² .. 0.988 R²)
+mean                 43.13 ms   (39.31 ms .. 48.65 ms)
+std dev              9.294 ms   (5.771 ms .. 12.56 ms)
+variance introduced by outliers: 72% (severely inflated)
 
 benchmarking LSWSolver/easy/dlist
-time                 53.43 ms   (52.31 ms .. 54.99 ms)
-                     0.998 R²   (0.995 R² .. 1.000 R²)
-mean                 53.15 ms   (52.49 ms .. 53.84 ms)
-std dev              1.253 ms   (957.6 μs .. 1.720 ms)
+time                 39.93 ms   (38.56 ms .. 42.60 ms)
+                     0.990 R²   (0.976 R² .. 0.998 R²)
+mean                 40.67 ms   (39.97 ms .. 41.88 ms)
+std dev              1.843 ms   (1.211 ms .. 2.776 ms)
+variance introduced by outliers: 12% (moderately inflated)
+
+benchmarking LSWSolver/easy/vector
+time                 6.771 ms   (6.728 ms .. 6.815 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 6.834 ms   (6.798 ms .. 6.880 ms)
+std dev              111.4 μs   (90.61 μs .. 137.0 μs)
 
 benchmarking LSWSolver/mild/set
-time                 49.98 ms   (47.39 ms .. 52.76 ms)
-                     0.992 R²   (0.982 R² .. 0.998 R²)
-mean                 50.97 ms   (49.94 ms .. 52.22 ms)
-std dev              2.295 ms   (1.726 ms .. 2.878 ms)
-variance introduced by outliers: 14% (moderately inflated)
+time                 39.89 ms   (39.52 ms .. 40.75 ms)
+                     0.999 R²   (0.995 R² .. 1.000 R²)
+mean                 39.90 ms   (39.52 ms .. 40.44 ms)
+std dev              922.3 μs   (455.7 μs .. 1.399 ms)
 
 benchmarking LSWSolver/mild/list
-time                 38.65 ms   (37.44 ms .. 39.68 ms)
-                     0.998 R²   (0.996 R² .. 0.999 R²)
-mean                 38.17 ms   (37.59 ms .. 38.87 ms)
-std dev              1.301 ms   (827.7 μs .. 1.956 ms)
+time                 29.20 ms   (28.79 ms .. 29.74 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 29.07 ms   (28.87 ms .. 29.29 ms)
+std dev              465.3 μs   (368.8 μs .. 607.7 μs)
 
 benchmarking LSWSolver/mild/dlist
-time                 43.34 ms   (42.42 ms .. 44.33 ms)
-                     0.998 R²   (0.997 R² .. 1.000 R²)
-mean                 43.91 ms   (43.09 ms .. 46.98 ms)
-std dev              2.851 ms   (700.4 μs .. 5.033 ms)
-variance introduced by outliers: 20% (moderately inflated)
-
-benchmarking LSWSolver/difficult1/set
-time                 56.46 ms   (54.12 ms .. 59.36 ms)
-                     0.994 R²   (0.987 R² .. 0.998 R²)
-mean                 55.69 ms   (54.52 ms .. 56.93 ms)
-std dev              2.414 ms   (1.962 ms .. 3.047 ms)
-
-benchmarking LSWSolver/difficult1/list
-time                 35.17 ms   (34.10 ms .. 36.49 ms)
-                     0.997 R²   (0.995 R² .. 0.999 R²)
-mean                 34.28 ms   (33.64 ms .. 34.86 ms)
-std dev              1.235 ms   (991.7 μs .. 1.594 ms)
-variance introduced by outliers: 11% (moderately inflated)
-
-benchmarking LSWSolver/difficult1/dlist
-time                 36.73 ms   (35.71 ms .. 37.58 ms)
-                     0.997 R²   (0.992 R² .. 0.999 R²)
-mean                 37.87 ms   (37.21 ms .. 39.03 ms)
-std dev              1.724 ms   (1.042 ms .. 2.712 ms)
-variance introduced by outliers: 12% (moderately inflated)
-
-benchmarking LSWSolver/difficult25/set
-time                 49.78 ms   (48.90 ms .. 50.80 ms)
+time                 31.67 ms   (31.31 ms .. 32.00 ms)
                      0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 50.39 ms   (49.87 ms .. 51.58 ms)
-std dev              1.428 ms   (698.8 μs .. 2.356 ms)
+mean                 32.27 ms   (31.94 ms .. 32.82 ms)
+std dev              887.9 μs   (521.8 μs .. 1.438 ms)
 
-benchmarking LSWSolver/difficult25/list
-time                 31.39 ms   (30.80 ms .. 31.93 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 31.39 ms   (31.02 ms .. 32.14 ms)
-std dev              1.096 ms   (556.2 μs .. 1.814 ms)
-variance introduced by outliers: 11% (moderately inflated)
-
-benchmarking LSWSolver/difficult25/dlist
-time                 36.28 ms   (35.58 ms .. 37.13 ms)
-                     0.998 R²   (0.997 R² .. 0.999 R²)
-mean                 35.78 ms   (35.21 ms .. 36.32 ms)
-std dev              1.119 ms   (736.2 μs .. 1.677 ms)
-
-benchmarking LSWSolver/fiendish/set
-time                 54.79 ms   (53.17 ms .. 55.75 ms)
-                     0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 57.78 ms   (56.75 ms .. 59.31 ms)
-std dev              2.215 ms   (1.484 ms .. 3.049 ms)
-
-benchmarking LSWSolver/fiendish/list
-time                 28.56 ms   (28.13 ms .. 29.01 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 28.46 ms   (28.30 ms .. 28.68 ms)
-std dev              381.0 μs   (299.1 μs .. 512.1 μs)
-
-benchmarking LSWSolver/fiendish/dlist
-time                 32.79 ms   (32.33 ms .. 33.22 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 33.10 ms   (32.82 ms .. 33.55 ms)
-std dev              729.2 μs   (530.2 μs .. 1.104 ms)
-
-benchmarking PartialApplicationLSWSolver/euler/set
-time                 33.41 ms   (32.50 ms .. 34.43 ms)
-                     0.998 R²   (0.997 R² .. 0.999 R²)
-mean                 32.34 ms   (31.93 ms .. 32.84 ms)
-std dev              1.020 ms   (726.3 μs .. 1.377 ms)
+benchmarking LSWSolver/mild/vector
+time                 6.965 ms   (6.881 ms .. 7.054 ms)
+                     0.999 R²   (0.998 R² .. 0.999 R²)
+mean                 6.980 ms   (6.930 ms .. 7.076 ms)
+std dev              201.4 μs   (112.7 μs .. 347.5 μs)
 variance introduced by outliers: 10% (moderately inflated)
 
+benchmarking LSWSolver/difficult1/set
+time                 43.03 ms   (42.31 ms .. 43.66 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 43.33 ms   (42.96 ms .. 44.45 ms)
+std dev              1.158 ms   (385.9 μs .. 2.019 ms)
+
+benchmarking LSWSolver/difficult1/list
+time                 26.10 ms   (25.65 ms .. 26.60 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 25.80 ms   (25.61 ms .. 26.02 ms)
+std dev              466.2 μs   (337.5 μs .. 644.8 μs)
+
+benchmarking LSWSolver/difficult1/dlist
+time                 28.56 ms   (28.35 ms .. 28.75 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 28.66 ms   (28.48 ms .. 29.04 ms)
+std dev              553.6 μs   (231.0 μs .. 1.010 ms)
+
+benchmarking LSWSolver/difficult1/vector
+time                 6.945 ms   (6.828 ms .. 7.098 ms)
+                     0.998 R²   (0.997 R² .. 1.000 R²)
+mean                 6.973 ms   (6.926 ms .. 7.062 ms)
+std dev              186.3 μs   (97.73 μs .. 355.0 μs)
+variance introduced by outliers: 10% (moderately inflated)
+
+benchmarking LSWSolver/difficult25/set
+time                 44.21 ms   (42.48 ms .. 46.42 ms)
+                     0.996 R²   (0.993 R² .. 1.000 R²)
+mean                 41.92 ms   (41.45 ms .. 42.90 ms)
+std dev              1.304 ms   (698.3 μs .. 2.147 ms)
+
+benchmarking LSWSolver/difficult25/list
+time                 32.70 ms   (31.17 ms .. 34.26 ms)
+                     0.994 R²   (0.989 R² .. 0.998 R²)
+mean                 30.21 ms   (29.38 ms .. 31.06 ms)
+std dev              1.851 ms   (1.378 ms .. 2.462 ms)
+variance introduced by outliers: 22% (moderately inflated)
+
+benchmarking LSWSolver/difficult25/dlist
+time                 37.19 ms   (35.61 ms .. 38.82 ms)
+                     0.995 R²   (0.992 R² .. 0.999 R²)
+mean                 36.50 ms   (35.98 ms .. 37.19 ms)
+std dev              1.255 ms   (862.1 μs .. 1.634 ms)
+variance introduced by outliers: 11% (moderately inflated)
+
+benchmarking LSWSolver/difficult25/vector
+time                 9.277 ms   (8.934 ms .. 9.786 ms)
+                     0.986 R²   (0.973 R² .. 0.996 R²)
+mean                 9.458 ms   (9.289 ms .. 9.695 ms)
+std dev              556.5 μs   (390.3 μs .. 775.2 μs)
+variance introduced by outliers: 31% (moderately inflated)
+
+benchmarking LSWSolver/fiendish/set
+time                 48.12 ms   (45.34 ms .. 50.80 ms)
+                     0.995 R²   (0.993 R² .. 0.998 R²)
+mean                 54.07 ms   (52.32 ms .. 55.64 ms)
+std dev              3.159 ms   (2.426 ms .. 4.164 ms)
+variance introduced by outliers: 15% (moderately inflated)
+
+benchmarking LSWSolver/fiendish/list
+time                 24.05 ms   (22.92 ms .. 26.56 ms)
+                     0.942 R²   (0.842 R² .. 0.999 R²)
+mean                 24.66 ms   (23.80 ms .. 26.92 ms)
+std dev              2.850 ms   (1.177 ms .. 5.142 ms)
+variance introduced by outliers: 51% (severely inflated)
+
+benchmarking LSWSolver/fiendish/dlist
+time                 27.87 ms   (25.74 ms .. 32.00 ms)
+                     0.947 R²   (0.874 R² .. 0.998 R²)
+mean                 28.11 ms   (27.31 ms .. 30.57 ms)
+std dev              2.713 ms   (950.8 μs .. 4.895 ms)
+variance introduced by outliers: 43% (moderately inflated)
+
+benchmarking LSWSolver/fiendish/vector
+time                 7.213 ms   (7.171 ms .. 7.252 ms)
+                     0.999 R²   (0.997 R² .. 1.000 R²)
+mean                 7.245 ms   (7.206 ms .. 7.324 ms)
+std dev              154.2 μs   (75.45 μs .. 273.4 μs)
+
+benchmarking PartialApplicationLSWSolver/euler/set
+time                 26.12 ms   (25.86 ms .. 26.39 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 26.31 ms   (26.18 ms .. 26.48 ms)
+std dev              333.6 μs   (262.1 μs .. 429.8 μs)
+
 benchmarking PartialApplicationLSWSolver/euler/list
-time                 10.00 ms   (9.836 ms .. 10.17 ms)
-                     0.998 R²   (0.997 R² .. 0.999 R²)
-mean                 10.26 ms   (10.15 ms .. 10.46 ms)
-std dev              412.3 μs   (277.5 μs .. 635.5 μs)
-variance introduced by outliers: 16% (moderately inflated)
+time                 8.541 ms   (8.463 ms .. 8.601 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 8.498 ms   (8.438 ms .. 8.566 ms)
+std dev              179.0 μs   (133.3 μs .. 250.2 μs)
 
 benchmarking PartialApplicationLSWSolver/euler/dlist
-time                 10.78 ms   (10.57 ms .. 10.94 ms)
-                     0.998 R²   (0.997 R² .. 0.999 R²)
-mean                 10.77 ms   (10.67 ms .. 10.88 ms)
-std dev              278.3 μs   (199.9 μs .. 440.8 μs)
+time                 8.892 ms   (8.817 ms .. 8.969 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 8.927 ms   (8.876 ms .. 8.982 ms)
+std dev              150.9 μs   (120.5 μs .. 203.3 μs)
+
+benchmarking PartialApplicationLSWSolver/euler/vector
+time                 2.501 ms   (2.479 ms .. 2.521 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 2.489 ms   (2.477 ms .. 2.509 ms)
+std dev              51.53 μs   (34.83 μs .. 88.36 μs)
 
 benchmarking PartialApplicationLSWSolver/easy/set
-time                 41.45 ms   (40.60 ms .. 42.49 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 38.82 ms   (38.05 ms .. 39.56 ms)
-std dev              1.605 ms   (1.367 ms .. 2.062 ms)
-variance introduced by outliers: 12% (moderately inflated)
+time                 30.80 ms   (30.49 ms .. 31.09 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 31.00 ms   (30.66 ms .. 32.18 ms)
+std dev              1.253 ms   (233.3 μs .. 2.433 ms)
+variance introduced by outliers: 11% (moderately inflated)
 
 benchmarking PartialApplicationLSWSolver/easy/list
-time                 11.75 ms   (11.53 ms .. 11.89 ms)
-                     0.998 R²   (0.996 R² .. 0.999 R²)
-mean                 12.47 ms   (12.27 ms .. 12.67 ms)
-std dev              518.5 μs   (458.3 μs .. 599.2 μs)
-variance introduced by outliers: 17% (moderately inflated)
+time                 10.01 ms   (9.935 ms .. 10.11 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 9.981 ms   (9.934 ms .. 10.04 ms)
+std dev              151.6 μs   (109.1 μs .. 195.1 μs)
 
 benchmarking PartialApplicationLSWSolver/easy/dlist
-time                 13.03 ms   (12.91 ms .. 13.16 ms)
+time                 10.89 ms   (10.75 ms .. 11.08 ms)
                      0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 12.93 ms   (12.86 ms .. 13.03 ms)
-std dev              205.9 μs   (155.7 μs .. 284.8 μs)
+mean                 10.81 ms   (10.76 ms .. 10.89 ms)
+std dev              180.9 μs   (137.6 μs .. 239.3 μs)
 
-benchmarking PartialApplicationLSWSolver/mild/set
-time                 34.39 ms   (33.87 ms .. 35.21 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 34.82 ms   (34.50 ms .. 35.25 ms)
-std dev              741.3 μs   (541.2 μs .. 1.110 ms)
-
-benchmarking PartialApplicationLSWSolver/mild/list
-time                 10.69 ms   (10.56 ms .. 10.83 ms)
-                     0.998 R²   (0.996 R² .. 1.000 R²)
-mean                 10.76 ms   (10.69 ms .. 10.95 ms)
-std dev              289.0 μs   (149.8 μs .. 556.9 μs)
-
-benchmarking PartialApplicationLSWSolver/mild/dlist
-time                 11.34 ms   (11.18 ms .. 11.52 ms)
-                     0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 11.32 ms   (11.25 ms .. 11.41 ms)
-std dev              207.3 μs   (155.5 μs .. 292.8 μs)
-
-benchmarking PartialApplicationLSWSolver/difficult1/set
-time                 28.63 ms   (28.18 ms .. 29.17 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 28.31 ms   (28.07 ms .. 28.52 ms)
-std dev              492.2 μs   (322.3 μs .. 783.9 μs)
-
-benchmarking PartialApplicationLSWSolver/difficult1/list
-time                 9.807 ms   (9.632 ms .. 10.02 ms)
-                     0.997 R²   (0.994 R² .. 0.998 R²)
-mean                 9.971 ms   (9.827 ms .. 10.15 ms)
-std dev              447.3 μs   (341.5 μs .. 581.5 μs)
-variance introduced by outliers: 19% (moderately inflated)
-
-benchmarking PartialApplicationLSWSolver/difficult1/dlist
-time                 9.917 ms   (9.709 ms .. 10.12 ms)
-                     0.997 R²   (0.996 R² .. 0.999 R²)
-mean                 10.51 ms   (10.37 ms .. 10.71 ms)
-std dev              449.4 μs   (350.2 μs .. 645.9 μs)
-variance introduced by outliers: 19% (moderately inflated)
-
-benchmarking PartialApplicationLSWSolver/difficult25/set
-time                 28.77 ms   (28.35 ms .. 29.19 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 28.51 ms   (28.30 ms .. 28.73 ms)
-std dev              455.5 μs   (345.1 μs .. 623.7 μs)
-
-benchmarking PartialApplicationLSWSolver/difficult25/list
-time                 9.507 ms   (9.395 ms .. 9.649 ms)
-                     0.999 R²   (0.998 R² .. 0.999 R²)
-mean                 9.583 ms   (9.521 ms .. 9.654 ms)
-std dev              177.3 μs   (143.9 μs .. 224.8 μs)
-
-benchmarking PartialApplicationLSWSolver/difficult25/dlist
-time                 9.967 ms   (9.836 ms .. 10.12 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 10.10 ms   (9.989 ms .. 10.30 ms)
-std dev              388.3 μs   (174.1 μs .. 626.4 μs)
+benchmarking PartialApplicationLSWSolver/easy/vector
+time                 2.708 ms   (2.600 ms .. 2.811 ms)
+                     0.994 R²   (0.990 R² .. 1.000 R²)
+mean                 2.617 ms   (2.599 ms .. 2.655 ms)
+std dev              83.83 μs   (53.06 μs .. 147.4 μs)
 variance introduced by outliers: 16% (moderately inflated)
 
+benchmarking PartialApplicationLSWSolver/mild/set
+time                 28.45 ms   (27.28 ms .. 29.29 ms)
+                     0.994 R²   (0.987 R² .. 0.998 R²)
+mean                 30.03 ms   (29.35 ms .. 30.93 ms)
+std dev              1.721 ms   (1.190 ms .. 2.438 ms)
+variance introduced by outliers: 17% (moderately inflated)
+
+benchmarking PartialApplicationLSWSolver/mild/list
+time                 9.031 ms   (8.954 ms .. 9.099 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 8.997 ms   (8.961 ms .. 9.031 ms)
+std dev              97.34 μs   (77.63 μs .. 126.1 μs)
+
+benchmarking PartialApplicationLSWSolver/mild/dlist
+time                 9.817 ms   (9.636 ms .. 10.07 ms)
+                     0.997 R²   (0.995 R² .. 0.999 R²)
+mean                 9.644 ms   (9.572 ms .. 9.743 ms)
+std dev              235.0 μs   (167.9 μs .. 337.3 μs)
+
+benchmarking PartialApplicationLSWSolver/mild/vector
+time                 2.493 ms   (2.427 ms .. 2.545 ms)
+                     0.989 R²   (0.979 R² .. 0.996 R²)
+mean                 2.843 ms   (2.732 ms .. 3.054 ms)
+std dev              474.1 μs   (323.9 μs .. 684.9 μs)
+variance introduced by outliers: 86% (severely inflated)
+
+benchmarking PartialApplicationLSWSolver/difficult1/set
+time                 22.97 ms   (22.71 ms .. 23.33 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 23.07 ms   (22.96 ms .. 23.17 ms)
+std dev              248.9 μs   (208.6 μs .. 310.6 μs)
+
+benchmarking PartialApplicationLSWSolver/difficult1/list
+time                 7.731 ms   (7.681 ms .. 7.780 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 7.774 ms   (7.749 ms .. 7.811 ms)
+std dev              87.63 μs   (70.52 μs .. 116.0 μs)
+
+benchmarking PartialApplicationLSWSolver/difficult1/dlist
+time                 9.983 ms   (9.351 ms .. 10.96 ms)
+                     0.969 R²   (0.949 R² .. 0.991 R²)
+mean                 8.867 ms   (8.572 ms .. 9.277 ms)
+std dev              946.7 μs   (637.1 μs .. 1.314 ms)
+variance introduced by outliers: 57% (severely inflated)
+
+benchmarking PartialApplicationLSWSolver/difficult1/vector
+time                 2.748 ms   (2.712 ms .. 2.782 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 2.725 ms   (2.709 ms .. 2.744 ms)
+std dev              58.17 μs   (48.04 μs .. 76.20 μs)
+
+benchmarking PartialApplicationLSWSolver/difficult25/set
+time                 23.64 ms   (23.00 ms .. 24.55 ms)
+                     0.995 R²   (0.988 R² .. 0.999 R²)
+mean                 24.62 ms   (24.28 ms .. 25.01 ms)
+std dev              812.3 μs   (591.2 μs .. 1.102 ms)
+
+benchmarking PartialApplicationLSWSolver/difficult25/list
+time                 8.110 ms   (8.056 ms .. 8.170 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 7.940 ms   (7.871 ms .. 7.996 ms)
+std dev              167.3 μs   (133.9 μs .. 215.6 μs)
+
+benchmarking PartialApplicationLSWSolver/difficult25/dlist
+time                 8.493 ms   (8.441 ms .. 8.555 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 8.457 ms   (8.404 ms .. 8.505 ms)
+std dev              145.5 μs   (106.0 μs .. 201.0 μs)
+
+benchmarking PartialApplicationLSWSolver/difficult25/vector
+time                 2.596 ms   (2.573 ms .. 2.624 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 2.586 ms   (2.574 ms .. 2.601 ms)
+std dev              43.60 μs   (35.63 μs .. 54.88 μs)
+
 benchmarking PartialApplicationLSWSolver/fiendish/set
-time                 26.06 ms   (25.63 ms .. 26.44 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 26.38 ms   (26.15 ms .. 26.65 ms)
-std dev              545.1 μs   (410.7 μs .. 793.9 μs)
+time                 23.14 ms   (21.86 ms .. 24.91 ms)
+                     0.985 R²   (0.969 R² .. 0.999 R²)
+mean                 22.36 ms   (21.98 ms .. 23.04 ms)
+std dev              1.164 ms   (635.4 μs .. 1.930 ms)
+variance introduced by outliers: 19% (moderately inflated)
 
 benchmarking PartialApplicationLSWSolver/fiendish/list
-time                 9.206 ms   (9.101 ms .. 9.317 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 9.309 ms   (9.244 ms .. 9.405 ms)
-std dev              214.9 μs   (124.4 μs .. 323.4 μs)
+time                 7.769 ms   (7.667 ms .. 7.879 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 7.749 ms   (7.711 ms .. 7.795 ms)
+std dev              122.7 μs   (89.61 μs .. 166.1 μs)
 
 benchmarking PartialApplicationLSWSolver/fiendish/dlist
-time                 9.705 ms   (9.604 ms .. 9.833 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 9.748 ms   (9.689 ms .. 9.880 ms)
-std dev              225.2 μs   (141.6 μs .. 357.3 μs)
+time                 8.186 ms   (8.076 ms .. 8.311 ms)
+                     0.997 R²   (0.994 R² .. 0.999 R²)
+mean                 8.322 ms   (8.214 ms .. 8.461 ms)
+std dev              335.8 μs   (235.2 μs .. 455.0 μs)
+variance introduced by outliers: 17% (moderately inflated)
+
+benchmarking PartialApplicationLSWSolver/fiendish/vector
+time                 2.629 ms   (2.612 ms .. 2.652 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 2.635 ms   (2.623 ms .. 2.654 ms)
+std dev              49.94 μs   (34.02 μs .. 83.00 μs)
 
 benchmarking SafeLSWSolver/euler/set
-time                 33.30 ms   (32.81 ms .. 33.80 ms)
+time                 27.37 ms   (27.06 ms .. 27.66 ms)
                      0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 32.90 ms   (32.64 ms .. 33.13 ms)
-std dev              506.7 μs   (402.4 μs .. 646.1 μs)
+mean                 27.62 ms   (27.46 ms .. 28.02 ms)
+std dev              468.2 μs   (247.9 μs .. 877.6 μs)
 
 benchmarking SafeLSWSolver/euler/list
-time                 10.00 ms   (9.926 ms .. 10.08 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 10.05 ms   (9.983 ms .. 10.13 ms)
-std dev              198.5 μs   (138.6 μs .. 281.0 μs)
+time                 8.343 ms   (8.293 ms .. 8.399 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 8.347 ms   (8.311 ms .. 8.422 ms)
+std dev              146.5 μs   (79.68 μs .. 260.8 μs)
 
 benchmarking SafeLSWSolver/euler/dlist
-time                 10.52 ms   (10.36 ms .. 10.65 ms)
-                     0.998 R²   (0.996 R² .. 0.999 R²)
-mean                 10.58 ms   (10.50 ms .. 10.70 ms)
-std dev              267.0 μs   (175.5 μs .. 463.8 μs)
+time                 8.961 ms   (8.799 ms .. 9.240 ms)
+                     0.994 R²   (0.986 R² .. 0.999 R²)
+mean                 9.077 ms   (8.961 ms .. 9.268 ms)
+std dev              410.7 μs   (279.5 μs .. 607.4 μs)
+variance introduced by outliers: 21% (moderately inflated)
+
+benchmarking SafeLSWSolver/euler/vector
+time                 2.410 ms   (2.391 ms .. 2.429 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 2.419 ms   (2.405 ms .. 2.446 ms)
+std dev              65.40 μs   (39.81 μs .. 116.4 μs)
+variance introduced by outliers: 14% (moderately inflated)
 
 benchmarking SafeLSWSolver/easy/set
-time                 30.66 ms   (30.16 ms .. 31.08 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 30.41 ms   (30.15 ms .. 30.63 ms)
-std dev              512.6 μs   (371.6 μs .. 767.7 μs)
+time                 25.45 ms   (25.27 ms .. 25.61 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 25.31 ms   (25.24 ms .. 25.38 ms)
+std dev              169.0 μs   (127.2 μs .. 229.8 μs)
 
 benchmarking SafeLSWSolver/easy/list
-time                 12.28 ms   (12.18 ms .. 12.42 ms)
-                     0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 12.16 ms   (12.08 ms .. 12.28 ms)
-std dev              269.2 μs   (198.1 μs .. 380.9 μs)
+time                 10.17 ms   (10.01 ms .. 10.37 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 10.14 ms   (10.08 ms .. 10.22 ms)
+std dev              179.9 μs   (136.9 μs .. 247.1 μs)
 
 benchmarking SafeLSWSolver/easy/dlist
-time                 12.89 ms   (12.72 ms .. 13.07 ms)
+time                 10.87 ms   (10.74 ms .. 11.01 ms)
                      0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 12.94 ms   (12.85 ms .. 13.07 ms)
-std dev              284.6 μs   (207.9 μs .. 426.6 μs)
+mean                 10.75 ms   (10.66 ms .. 10.83 ms)
+std dev              233.0 μs   (170.8 μs .. 320.2 μs)
+
+benchmarking SafeLSWSolver/easy/vector
+time                 2.554 ms   (2.522 ms .. 2.600 ms)
+                     0.998 R²   (0.995 R² .. 1.000 R²)
+mean                 2.551 ms   (2.537 ms .. 2.580 ms)
+std dev              63.71 μs   (40.63 μs .. 111.2 μs)
+variance introduced by outliers: 11% (moderately inflated)
 
 benchmarking SafeLSWSolver/mild/set
-time                 34.72 ms   (34.17 ms .. 35.30 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 34.38 ms   (34.04 ms .. 34.67 ms)
-std dev              625.1 μs   (490.7 μs .. 893.1 μs)
+time                 28.70 ms   (28.48 ms .. 29.00 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 28.68 ms   (28.60 ms .. 28.81 ms)
+std dev              225.4 μs   (170.3 μs .. 302.5 μs)
 
 benchmarking SafeLSWSolver/mild/list
-time                 10.69 ms   (10.57 ms .. 10.83 ms)
+time                 8.997 ms   (8.909 ms .. 9.150 ms)
                      0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 10.63 ms   (10.56 ms .. 10.72 ms)
-std dev              204.1 μs   (147.3 μs .. 290.4 μs)
+mean                 8.993 ms   (8.951 ms .. 9.047 ms)
+std dev              129.4 μs   (94.61 μs .. 207.9 μs)
 
 benchmarking SafeLSWSolver/mild/dlist
-time                 11.16 ms   (10.99 ms .. 11.37 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 11.14 ms   (11.07 ms .. 11.23 ms)
-std dev              210.9 μs   (152.0 μs .. 289.2 μs)
+time                 9.394 ms   (9.324 ms .. 9.484 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 9.473 ms   (9.420 ms .. 9.551 ms)
+std dev              177.5 μs   (132.0 μs .. 286.0 μs)
+
+benchmarking SafeLSWSolver/mild/vector
+time                 2.510 ms   (2.493 ms .. 2.537 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 2.525 ms   (2.513 ms .. 2.545 ms)
+std dev              51.19 μs   (36.55 μs .. 79.44 μs)
 
 benchmarking SafeLSWSolver/difficult1/set
-time                 35.27 ms   (34.84 ms .. 35.69 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 35.80 ms   (35.48 ms .. 36.34 ms)
-std dev              853.6 μs   (459.0 μs .. 1.364 ms)
+time                 29.62 ms   (29.44 ms .. 29.88 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 29.62 ms   (29.51 ms .. 29.72 ms)
+std dev              214.1 μs   (157.8 μs .. 301.7 μs)
 
 benchmarking SafeLSWSolver/difficult1/list
-time                 9.544 ms   (9.428 ms .. 9.724 ms)
-                     0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 9.588 ms   (9.531 ms .. 9.691 ms)
-std dev              208.6 μs   (124.3 μs .. 353.3 μs)
+time                 7.935 ms   (7.846 ms .. 8.026 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 8.049 ms   (7.988 ms .. 8.123 ms)
+std dev              184.8 μs   (142.8 μs .. 261.0 μs)
 
 benchmarking SafeLSWSolver/difficult1/dlist
-time                 10.10 ms   (9.924 ms .. 10.24 ms)
-                     0.998 R²   (0.997 R² .. 0.999 R²)
-mean                 10.18 ms   (10.08 ms .. 10.32 ms)
-std dev              303.6 μs   (202.4 μs .. 434.0 μs)
+time                 8.887 ms   (8.649 ms .. 9.284 ms)
+                     0.991 R²   (0.984 R² .. 0.996 R²)
+mean                 8.723 ms   (8.578 ms .. 8.893 ms)
+std dev              443.0 μs   (321.0 μs .. 550.1 μs)
+variance introduced by outliers: 24% (moderately inflated)
+
+benchmarking SafeLSWSolver/difficult1/vector
+time                 2.491 ms   (2.465 ms .. 2.527 ms)
+                     0.999 R²   (0.998 R² .. 0.999 R²)
+mean                 2.589 ms   (2.566 ms .. 2.622 ms)
+std dev              92.81 μs   (70.69 μs .. 121.0 μs)
+variance introduced by outliers: 20% (moderately inflated)
 
 benchmarking SafeLSWSolver/difficult25/set
-time                 32.42 ms   (32.18 ms .. 32.68 ms)
-                     1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 32.54 ms   (32.31 ms .. 32.81 ms)
-std dev              544.9 μs   (363.3 μs .. 822.9 μs)
+time                 27.08 ms   (26.88 ms .. 27.25 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 27.04 ms   (26.93 ms .. 27.15 ms)
+std dev              224.2 μs   (182.7 μs .. 295.6 μs)
 
 benchmarking SafeLSWSolver/difficult25/list
-time                 9.452 ms   (9.375 ms .. 9.561 ms)
-                     0.999 R²   (0.997 R² .. 1.000 R²)
-mean                 9.510 ms   (9.448 ms .. 9.609 ms)
-std dev              204.6 μs   (134.7 μs .. 335.7 μs)
+time                 7.918 ms   (7.849 ms .. 8.014 ms)
+                     0.998 R²   (0.994 R² .. 1.000 R²)
+mean                 8.021 ms   (7.972 ms .. 8.140 ms)
+std dev              206.3 μs   (121.9 μs .. 364.2 μs)
 
 benchmarking SafeLSWSolver/difficult25/dlist
-time                 9.911 ms   (9.820 ms .. 10.01 ms)
+time                 8.424 ms   (8.345 ms .. 8.511 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 8.373 ms   (8.324 ms .. 8.429 ms)
+std dev              145.3 μs   (108.8 μs .. 204.9 μs)
+
+benchmarking SafeLSWSolver/difficult25/vector
+time                 2.482 ms   (2.465 ms .. 2.502 ms)
                      0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 9.967 ms   (9.917 ms .. 10.05 ms)
-std dev              180.7 μs   (133.1 μs .. 249.5 μs)
+mean                 2.498 ms   (2.485 ms .. 2.519 ms)
+std dev              55.29 μs   (38.46 μs .. 78.90 μs)
 
 benchmarking SafeLSWSolver/fiendish/set
-time                 36.96 ms   (36.64 ms .. 37.25 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 36.86 ms   (36.59 ms .. 37.19 ms)
-std dev              647.2 μs   (416.6 μs .. 1.026 ms)
+time                 30.76 ms   (30.51 ms .. 30.95 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 30.76 ms   (30.63 ms .. 30.87 ms)
+std dev              263.2 μs   (197.4 μs .. 363.5 μs)
 
 benchmarking SafeLSWSolver/fiendish/list
-time                 9.105 ms   (9.040 ms .. 9.196 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 9.192 ms   (9.139 ms .. 9.274 ms)
-std dev              185.0 μs   (120.3 μs .. 261.3 μs)
+time                 7.759 ms   (7.698 ms .. 7.820 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 7.791 ms   (7.760 ms .. 7.849 ms)
+std dev              117.4 μs   (72.68 μs .. 214.9 μs)
 
 benchmarking SafeLSWSolver/fiendish/dlist
-time                 9.471 ms   (9.363 ms .. 9.586 ms)
-                     0.997 R²   (0.994 R² .. 0.999 R²)
-mean                 9.720 ms   (9.602 ms .. 9.922 ms)
-std dev              405.6 μs   (242.1 μs .. 623.0 μs)
+time                 8.147 ms   (8.069 ms .. 8.205 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 8.173 ms   (8.127 ms .. 8.242 ms)
+std dev              151.7 μs   (111.2 μs .. 234.6 μs)
+
+benchmarking SafeLSWSolver/fiendish/vector
+time                 2.552 ms   (2.529 ms .. 2.576 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 2.595 ms   (2.575 ms .. 2.637 ms)
+std dev              87.10 μs   (55.15 μs .. 153.8 μs)
 variance introduced by outliers: 18% (moderately inflated)
 ```
